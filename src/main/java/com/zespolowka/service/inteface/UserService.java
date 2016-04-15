@@ -18,6 +18,8 @@ public interface UserService {
 
     Collection<User> getAllUsers();
 
+    Collection<User> findByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String like);
+
     User create(UserCreateForm form);
 
     User editUser(UserEditForm userEditForm);

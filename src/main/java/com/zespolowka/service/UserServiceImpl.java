@@ -48,9 +48,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    /**
-     * Tworzy nowego uzytkownika przez formularz do rejestacji
-     */
+    public Collection<User> findByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String like) {
+        return userRepository.findEmailByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(like, like, like);
+    }
+
+    @Override
     public User create(UserCreateForm form) {
         User user = new User();
         user.setName(form.getName());
@@ -61,10 +63,6 @@ public class UserServiceImpl implements UserService {
         logger.info("Stworzono uzytkownika");
         return userRepository.save(user);
     }
-
-    /**
-     * Edytuje uzytkownika
-     */
 
 
     public User editUser(UserEditForm userEditForm) {

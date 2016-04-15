@@ -6,7 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="jumbotron">
+    <div class="jumbotron" sec:authorize="isAuthenticated()">
         <div class="container">
             <h1>Witaj <strong>Użytkowniku</strong></h1>
             <h2>Zapoznaj się z testami</h2>
@@ -30,7 +30,8 @@
                         </thead>
                         <tbody>
                         <tr th:each="test:*{activeTest}">
-                            <td th:text="*{test.name}"/>
+                            <td><a th:href="'/solutionTest/'+*{test.id}"
+                                   th:text="*{test.name}"/></td>
                             <td th:text="*{test.attempts}"/>
                             <td th:text="${#lists.size(test.tasks)}"/>
                             <td th:text="*{test.maxPoints}"/>

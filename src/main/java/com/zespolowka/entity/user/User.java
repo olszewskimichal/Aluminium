@@ -1,5 +1,7 @@
 package com.zespolowka.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -12,31 +14,35 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    private boolean enabled;
-
     private String name;
 
     private String lastName;
 
     private String email;
 
+    @JsonIgnore
     private String passwordHash;
 
+    @JsonIgnore
+    private boolean enabled;
+
+    @JsonIgnore
     private int login_tries;
 
+    @JsonIgnore
     private boolean accountNonLocked = true;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role;
 
     public User() {
-        super();
         this.enabled = false;
         this.login_tries = 3;
     }
 
+
     public User(String name, String lastName, String email, String passwordHash) {
-        super();
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -122,14 +128,9 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", enabled=" + enabled +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", login_tries=" + login_tries +
-                ", accountNonLocked=" + accountNonLocked +
-                ", role=" + role +
                 '}';
     }
 }

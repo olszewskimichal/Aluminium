@@ -60,7 +60,16 @@
                         </div>
                     </div>
                     <div th:if="*{tasks[__${rowStat.index}__].taskType}==2" class="form-group col-md-12">
-                        <h4 th:text="${rowStat.count}+'. '+*{tasks[__${rowStat.index}__].task.question}"/>
+                        <h4 th:text="${rowStat.count}+'. '+*{tasks[__${rowStat.index}__].task.question}+'. '+#{test.programmingSolution}"/>
+                        <label for="selectLanguage">Wybierz język, w którym rozwiążesz zadanie</label>
+                        <select id="selectLanguage"
+                                th:field="*{tasks[__${rowStat.index}__].language}"
+                                class="form-control">
+                            <option th:each="language:*{tasks[__${rowStat.index}__].languages}" th:value="${language}"
+                                    th:text="${language}"></option>
+                        </select>
+                        <br/>
+
                         <div class="input-group">
                             <textarea rows="30" class="form-control"
                                       th:field="*{tasks[__${rowStat.index}__].answerCode}"/>

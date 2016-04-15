@@ -52,7 +52,7 @@ public class TaskClosed extends Task {
                 "Task='" + super.toString() + '\'' +
                 "question='" + super.getQuestion() + '\'' +
                 "countingType=" + countingType + '\'' +
-                "answers=" + answers.toString() +
+//                "answers=" + answers.toString() +
                 '}';
     }
 }

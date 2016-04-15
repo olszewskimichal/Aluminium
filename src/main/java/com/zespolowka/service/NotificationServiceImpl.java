@@ -16,10 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -97,8 +94,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public void sendMessage(NewMessageForm form) {
-
-        String result[] = form.getReceivers().split(",");
+        String result[] = form.getReceivers().substring(0, form.getReceivers().length() - 2).split(",");
+        logger.info(Arrays.toString(result));
         Notification notif;
         for (String s : result) {
             String st = s.replaceAll("\\s+", "");

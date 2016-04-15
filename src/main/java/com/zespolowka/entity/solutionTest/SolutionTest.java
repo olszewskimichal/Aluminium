@@ -67,6 +67,8 @@ public class SolutionTest {
 
     public void addTaskSolutionToTest(TaskSolution taskSolution) throws IOException, ParseException {
         taskSolution.setTask(test.getTasks().get(taskNo++));
+        logger.info(test.toString());
+        logger.info(taskSolution.getTask().toString());
         if (taskSolution instanceof TaskClosedSolution) {
             TaskClosedSolution taskSol = (TaskClosedSolution) taskSolution;
             TaskClosed taskClo = (TaskClosed) taskSol.getTask();
@@ -170,9 +172,12 @@ public class SolutionTest {
                 taskOpenSolution.setAnswer(solutionTaskForm.getAnswer());
                 addTaskSolutionToTest(taskOpenSolution);
             } else if (solutionTaskForm.getTaskType() == SolutionTaskForm.PROGRAMMINGTASK) {
+                logger.info("WCHODZISZ TU?");
                 logger.info(solutionTaskForm.toString());
                 TaskProgrammingSolution taskProgrammingSolution = new TaskProgrammingSolution(solutionTaskForm.getTask());
                 taskProgrammingSolution.setAnswerCode(solutionTaskForm.getAnswerCode());
+
+                taskProgrammingSolution.setLanguage(solutionTaskForm.getLanguage());
                 addTaskSolutionToTest(taskProgrammingSolution);
             }
         return this;

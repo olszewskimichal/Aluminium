@@ -62,9 +62,8 @@ public class SolutionTestServiceImpl implements SolutionTestService {
     @Override
     public SolutionTestForm createForm(Test test, User user) {
         SolutionTest solutionTest = (SolutionTest) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
+        logger.info(test.toString());
         if (solutionTest != null) {
-            logger.info("chuj" + solutionTest);
-            logger.info(solutionTest.secondsToEnd() + "");
         } else {
             solutionTest = new SolutionTest(test, user);
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/M/d H:m:s");
@@ -72,8 +71,6 @@ public class SolutionTestServiceImpl implements SolutionTestService {
             solutionTest.setBeginSolution(LocalDateTime.parse(dateTime.getYear() + "/" + dateTime.getMonthValue() + "/" + dateTime.getDayOfMonth() + " " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond(), dateTimeFormatter));
             solutionTest.setAttempt(getSolutionTestsByUserAndTest(user, test).size() + 1);
             this.httpSession.setAttribute(TEST_ATTRIBUTE_NAME, solutionTest);
-            logger.info(solutionTest + "nie ma chuja");
-
         }
         SolutionTestForm solutionTestForm = new SolutionTestForm();
         solutionTestForm.setName(test.getName());

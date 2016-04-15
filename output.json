@@ -1,0 +1,3 @@
+{
+  "result": "\nBadanie wp.pl [212.77.98.9] z 32 bajtami danych:\nOdpowied� z 212.77.98.9: bajt�w=32 czas=17ms TTL=55\nOdpowied� z 212.77.98.9: bajt�w=32 czas=17ms TTL=55\nUp�yn�� limit czasu ��dania.\nOdpowied� z 212.77.98.9: bajt�w=32 czas=15ms TTL=55\n\nStatystyka badania ping dla 212.77.98.9:\n    Pakiety: Wys�ane = 4, Odebrane = 3, Utracone = 1\n             (25% straty),\nSzacunkowy czas b��dzenia pakiet�w w millisekundach:\n    Minimum = 15 ms, Maksimum = 17 ms, Czas �redni = 16 ms\n"
+}
