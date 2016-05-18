@@ -94,7 +94,6 @@ public class SolutionTestServiceImpl implements SolutionTestService {
             LocalDateTime dateTime = LocalDateTime.now();
             solutionTest.setEndSolution(LocalDateTime.parse(dateTime.getYear() + "/" + dateTime.getMonthValue() + '/' + dateTime.getDayOfMonth() + ' ' + dateTime.getHour() + ':' + dateTime.getMinute() + ':' + dateTime.getSecond(), dateTimeFormatter));
             solutionTest.setSolutionStatus(solutionStatus);
-            logger.info("{} {}", solutionTest.getBeginSolution(), solutionTest.getEndSolution());
             if (solutionTest.getSolutionStatus() == SolutionStatus.FINISHED) {
                 ResourceBundle messages = ResourceBundle.getBundle("messages", LocaleContextHolder.getLocale());
                 NewMessageForm newMessageForm = new NewMessageForm();
@@ -167,10 +166,6 @@ public class SolutionTestServiceImpl implements SolutionTestService {
 
     public void addTaskSolutionToTest(SolutionTest solutionTest, TaskSolution taskSolution) throws IOException, ParseException {
         try {
-            for (ProgrammingLanguages a : ProgrammingLanguages.values()) {
-                logger.info(a.toString());
-            }
-
             List<Long> integerList = (List<Long>) httpSession.getAttribute("integerList");
             if (environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].equals("prod")) {
                 Long minimumId = Collections.min(integerList);
@@ -252,21 +247,18 @@ public class SolutionTestServiceImpl implements SolutionTestService {
                             FileUtils.writeStringToFile(new File(dir + userDirectory + taskProgrammingDetail.getTestClassName()), taskProgrammingDetail.getTestCode());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + "restricted_list_java"), taskProgrammingDetail.getRestrictedList());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + CONFIG), jsonObject.toJSONString());
-                            logger.info(jsonObject.toJSONString());
                         } else if (((TaskProgrammingSolution) taskSolution).getLanguage().equals("CPP")) {
                             jsonObject = solutionConfig.createCppConfig(taskProgrammingDetail.getSolutionClassName(), taskProgrammingDetail.getTestClassName(), "restricted_list_cpp", "-w");
                             FileUtils.writeStringToFile(new File(dir + userDirectory + taskProgrammingDetail.getSolutionClassName()), taskSol.getAnswerCode());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + taskProgrammingDetail.getTestClassName()), taskProgrammingDetail.getTestCode());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + "restricted_list_cpp"), taskProgrammingDetail.getRestrictedList());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + CONFIG), jsonObject.toJSONString());
-                            logger.info(jsonObject.toJSONString());
                         } else if (((TaskProgrammingSolution) taskSolution).getLanguage().equals(ProgrammingLanguages.PYTHON3.toString())) {
                             jsonObject = solutionConfig.createPythonConfig(taskProgrammingDetail.getSolutionClassName(), taskProgrammingDetail.getTestClassName(), "restricted_list_python");
                             FileUtils.writeStringToFile(new File(dir + userDirectory + taskProgrammingDetail.getSolutionClassName()), taskSol.getAnswerCode());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + taskProgrammingDetail.getTestClassName()), taskProgrammingDetail.getTestCode());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + "restricted_list_python"), taskProgrammingDetail.getRestrictedList());
                             FileUtils.writeStringToFile(new File(dir + userDirectory + CONFIG), jsonObject.toJSONString());
-                            logger.info(jsonObject.toJSONString());
                         }
                     }
                 }
@@ -300,7 +292,7 @@ public class SolutionTestServiceImpl implements SolutionTestService {
                     taskSol.setPoints(0.0f);
                 }
                 FileUtils.deleteDirectory(new File(resultDir + userDirectory));
-                // FileUtils.deleteDirectory(new File(dir + userDirectory ));
+                FileUtils.deleteDirectory(new File(dir + userDirectory ));
                 solutionTest.getSolutionTasks().add(taskSol);
             }
             if (taskSolution instanceof TaskSqlSolution) {
@@ -348,7 +340,7 @@ public class SolutionTestServiceImpl implements SolutionTestService {
                     taskSqlSolution.setPoints(0.0f);
                 }
                 FileUtils.deleteDirectory(new File(resultDir + userDirectory));
-                // FileUtils.deleteDirectory(new File(dir + userDirectory ));
+                FileUtils.deleteDirectory(new File(dir + userDirectory ));
                 solutionTest.getSolutionTasks().add(taskSqlSolution);
             }
         } catch (Exception e) {
@@ -362,7 +354,6 @@ public class SolutionTestServiceImpl implements SolutionTestService {
     public SolutionTest create(SolutionTest solutionTest, SolutionTestForm solutionTestForm) throws IOException, ParseException {
         try {
             List<SolutionTaskForm> solutionTaskForms = solutionTestForm.getTasks();
-            logger.info("{} create", String.valueOf(solutionTaskForms.size()));
             solutionTest.setSolutionTasks(new ArrayList<>());
             solutionTest.setPoints(0.0f);
             this.taskNo = 0;
@@ -416,12 +407,10 @@ public class SolutionTestServiceImpl implements SolutionTestService {
         this.taskNo = 0;
         SolutionTestForm solutionTestForm = new SolutionTestForm();
         try {
-            logger.info("{}size SolutionTasks", solutionTest.getSolutionTasks().size());
             solutionTestForm.setName(solutionTest.getTest().getName());
             solutionTestForm.setSolutionId(solutionTest.getId());
             List<SolutionTaskForm> solutionTaskFormList = solutionTest.getSolutionTasks().stream().map(SolutionTaskForm::new).collect(Collectors.toList());
             solutionTestForm.setTasks(solutionTaskFormList);
-            logger.info("{}", solutionTestForm.getTasks().size());
             this.taskNo = 0;
         } catch (Exception e) {
             logger.info(e.getMessage(), e);
