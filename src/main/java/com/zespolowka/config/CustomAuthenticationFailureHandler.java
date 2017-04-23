@@ -1,7 +1,7 @@
 package com.zespolowka.config;
 
 import com.zespolowka.entity.user.User;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     private LocaleResolver localeResolver;
 
     @Autowired
-    private UserService userService;
+    private UserService UserService;
 
     public CustomAuthenticationFailureHandler() {
     }
@@ -46,17 +46,17 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
             String email = request.getParameter("username");
             try {
-                User user = userService.getUserByEmail(email)
+                User user = UserService.getUserByEmail(email)
                         .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
                 int tries = user.getLogin_tries();
                 tries--;
                 if (tries > 0) {
                     user.setLogin_tries(tries);
                     logger.info("Tries:{}", user.getLogin_tries());
-                    userService.update(user);
+                    UserService.update(user);
                 } else {
                     user.setAccountNonLocked(false);
-                    userService.update(user);
+                    UserService.update(user);
                     logger.info("User blocked");
                 }
             } catch (Exception e) {
@@ -83,7 +83,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         return "CustomAuthenticationFailureHandler{" +
                 "messages=" + messages +
                 ", localeResolver=" + localeResolver +
-                ", userService=" + userService +
+                ", UserServiceImpl=" + UserService +
                 '}';
     }
 }

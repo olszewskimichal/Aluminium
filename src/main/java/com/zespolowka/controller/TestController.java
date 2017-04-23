@@ -8,10 +8,10 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.CreateTestForm;
 import com.zespolowka.forms.ProgrammingTaskForm;
 import com.zespolowka.forms.TaskForm;
+import com.zespolowka.service.SolutionTestService;
 import com.zespolowka.service.TestFormService;
-import com.zespolowka.service.inteface.SolutionTestService;
-import com.zespolowka.service.inteface.TestService;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.TestService;
+import com.zespolowka.service.UserService;
 import com.zespolowka.validators.CreateTestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,16 +48,16 @@ public class TestController {
     private final TestService testService;
     private final CreateTestValidator createTestValidator;
     private final SolutionTestService solutionTestService;
-    private final UserService userService;
+    private final UserService UserService;
     private CreateTestForm createTestForm;
 
     @Autowired
-    public TestController(final TestFormService testFormService, TestService testService, CreateTestValidator createTestValidator, SolutionTestService solutionTestService, UserService userService) {
+    public TestController(final TestFormService testFormService, TestService testService, CreateTestValidator createTestValidator, SolutionTestService solutionTestService, UserService UserService) {
         this.testFormService = testFormService;
         this.testService = testService;
         this.createTestValidator = createTestValidator;
         this.solutionTestService = solutionTestService;
-        this.userService = userService;
+        this.UserService = UserService;
     }
 
 
@@ -263,7 +263,7 @@ public class TestController {
     public String showUserTests(@PathVariable final Long id, final Model model) {
         logger.info("nazwa metody = showUserTests");
         try {
-            User user = userService.getUserById(id)
+            User user = UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
         } catch (final Exception e) {
@@ -347,15 +347,5 @@ public class TestController {
                 logger.info("FILE NOT FOUND: {}", ex.getMessage());
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        return "TestController{" +
-                "testFormService=" + testFormService +
-                ", testService=" + testService +
-                ", createTestValidator=" + createTestValidator +
-                ", createTestForm=" + createTestForm +
-                '}';
     }
 }

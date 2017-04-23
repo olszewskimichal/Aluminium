@@ -6,7 +6,6 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.NewMessageForm;
 import com.zespolowka.repository.NotificationRepository;
 import com.zespolowka.repository.UserRepository;
-import com.zespolowka.service.inteface.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,44 +21,39 @@ import java.util.NoSuchElementException;
 
 @Service
 @Transactional
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationService {
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public NotificationServiceImpl(NotificationRepository notificationRepository, UserRepository userRepository) {
+    public NotificationService(NotificationRepository notificationRepository, UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.userRepository = userRepository;
     }
 
 
-    @Override
     public Notification getNotificationById(Long id) {
         logger.info("getNotificationById = {}", id);
         return notificationRepository.findOne(id);
     }
 
 
-    @Override
     public Collection<Notification> findTop5ByUserIdOrUserRoleOrderByDateDesc(Long userId, Role userRole) {
         logger.info("findTop5ByUserId={}OrUserRole={}OrderByDateDesc = ", userId, userRole);
         return notificationRepository.findTop5ByUserIdOrUserRoleOrderByDateDesc(userId, userRole);
     }
 
-    @Override
     public Long countByUnreadAndUserId(boolean unread, Long userId) {
         logger.info("countByUnread={}AndUserId={}", unread, userId);
         return notificationRepository.countByUnreadAndUserId(unread, userId);
     }
 
-    @Override
     public Long countByUnreadAndUserRole(boolean unread, Role userRole) {
         logger.info("countByUnread={}AndUserId={}", unread, userRole);
         return notificationRepository.countByUnreadAndUserRole(unread, userRole);
     }
 
-    @Override
     public Notification createNotification(Notification notification) {
         logger.info("createNotif{}", notification);
         return notificationRepository.save(notification);
@@ -69,7 +63,6 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.findAllByUserIdOrUserRoleOrderByDateDesc(pageable, userId, userRol);
     }
 
-    @Override
     public Notification changeStatus(Long idNotification) {
         Notification notification = notificationRepository.getOne(idNotification);
         notification.setUnread(false);
@@ -126,22 +119,8 @@ public class NotificationServiceImpl implements NotificationService {
         logger.info("Po usunieciu:{}", notificationRepository.count());
     }
 
-    @Override
-    public void deleteMessagesByUserRole(Role userRole) {
-        notificationRepository.deleteMessagesByUserRole(userRole);
-    }
-
-    @Override
     public void deleteMessagesBySender(User user) {
         notificationRepository.deleteMessagesBySender(user);
-    }
-
-    @Override
-    public String toString() {
-        return "NotificationServiceImpl{" +
-                "notificationRepository=" + notificationRepository +
-                ", userRepository=" + userRepository +
-                '}';
     }
 }
 

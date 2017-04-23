@@ -3,7 +3,7 @@ package com.zespolowka.controller.rest;
 import com.zespolowka.entity.Notification;
 import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.User;
-import com.zespolowka.service.inteface.NotificationService;
+import com.zespolowka.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,14 +81,5 @@ public class NotificationRestController {
     public void changeQuantity(@RequestParam(value = "id", required = true) Long id) {
         logger.info("Zaktualizuj wiadomosc o id {}", id);
         notificationService.changeStatus(id);
-    }
-
-    @Override
-    public String toString() {
-        return "NotificationRestController{" +
-                "notificationService=" + notificationService +
-                ", currentUser=" + currentUser +
-                ", user=" + user +
-                '}';
     }
 }

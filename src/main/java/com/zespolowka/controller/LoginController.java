@@ -2,8 +2,8 @@ package com.zespolowka.controller;
 
 
 import com.zespolowka.entity.user.User;
-import com.zespolowka.service.inteface.SendMailService;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.SendMailService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +75,4 @@ public class LoginController {
         return "remindPassword";
     }
 
-    @Override
-    public String toString() {
-        return "LoginController{" +
-                "userService=" + userService +
-                ", sendMailService=" + sendMailService +
-                '}';
-    }
 }

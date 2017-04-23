@@ -7,8 +7,8 @@ import com.zespolowka.entity.solutionTest.TaskTypeChecker;
 import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.SolutionTestForm;
-import com.zespolowka.service.inteface.SolutionTestService;
-import com.zespolowka.service.inteface.TestService;
+import com.zespolowka.service.SolutionTestService;
+import com.zespolowka.service.TestService;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,13 +232,4 @@ public class SolutionTestController {
         return "userTests";
     }
 
-
-    @Override
-    public String toString() {
-        return "SolutionTestController{" +
-                "httpSession=" + httpSession +
-                ", solutionTestService=" + solutionTestService +
-                ", testService=" + testService +
-                '}';
-    }
 }

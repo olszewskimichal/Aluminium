@@ -5,8 +5,8 @@ import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
 import com.zespolowka.repository.SolutionTestRepository;
-import com.zespolowka.service.inteface.NotificationService;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.NotificationService;
+import com.zespolowka.service.UserService;
 import com.zespolowka.validators.ChangePasswordValidator;
 import com.zespolowka.validators.UserEditValidator;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import java.util.Objects;
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final UserService userService;
+    private final UserService UserService;
 
     @Autowired
     private final NotificationService notificationService;
@@ -51,8 +51,8 @@ public class UserController {
 
 
     @Autowired
-    public UserController(final UserService userService, NotificationService notificationService, ChangePasswordValidator changePasswordValidator, UserEditValidator userEditValidator, SolutionTestRepository solutionTestRepository) {
-        this.userService = userService;
+    public UserController(final UserService UserService, NotificationService notificationService, ChangePasswordValidator changePasswordValidator, UserEditValidator userEditValidator, SolutionTestRepository solutionTestRepository) {
+        this.UserService = UserService;
         this.notificationService = notificationService;
         this.changePasswordValidator = changePasswordValidator;
         this.userEditValidator = userEditValidator;
@@ -64,7 +64,7 @@ public class UserController {
     public String showUserDetail(@PathVariable final Long id, final Model model) {
         logger.info("nazwa metody = showUserDetail");
         try {
-            final User user = userService.getUserById(id)
+            final User user = UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute(user);
         } catch (final Exception e) {
@@ -112,7 +112,7 @@ public class UserController {
             logger.info("err:{}", err);
             return "userEdit";
         } else {
-            final User user = userService.editUser(userEditForm);
+            final User user = UserService.editUser(userEditForm);
             CurrentUser currentUser = new CurrentUser(user);
             Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), currentUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -126,11 +126,11 @@ public class UserController {
     public String editUser(@PathVariable final Integer id, final Model model) {
         logger.debug("nazwa metody = editUser");
         try {
-            model.addAttribute("userEditForm", new UserEditForm(userService.getUserById(id)
+            model.addAttribute("userEditForm", new UserEditForm(UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)))));
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
-            logger.info("{}" + '\n' + "{}" + '\n' + "{}", id.toString(), model, userService.getUserById(id));
+            logger.info("{}" + '\n' + "{}" + '\n' + "{}", id.toString(), model, UserService.getUserById(id));
         }
         return "userEdit";
     }
@@ -143,7 +143,7 @@ public class UserController {
         if (errors.hasErrors()) {
             return "userEdit";
         } else {
-            final User user = userService.editUser(userEditForm);
+            final User user = UserService.editUser(userEditForm);
             return "redirect:/user/" + user.getId();
         }
 
@@ -160,7 +160,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("blad", true);
             redirectAttributes.addFlashAttribute("message", "Nie mozesz usunac siebie");
         } else {
-            User user = userService.getUserById(id)
+            User user = UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             if (currentUser.getRole().name().equals("ADMIN") && user.getRole().name().equals("SUPERADMIN")) {
                 logger.info("Nie mozesz usunac SA");
@@ -171,7 +171,7 @@ public class UserController {
                 notificationService.deleteMessagesBySender(user);
                 solutionTestRepository.deleteSolutionTestsByUser(user);
                 notificationService.deleteMessagesByUserId(user.getId());
-                userService.delete(user.getId());
+                UserService.delete(user.getId());
                 redirectAttributes.addFlashAttribute("sukces", true);
                 redirectAttributes.addFlashAttribute("message", usunieto);
             }
@@ -186,7 +186,7 @@ public class UserController {
         final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final User doer = currentUser.getUser();
         try {
-            User user = userService.getUserById(id)
+            User user = UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
 
             if (doer.getRole().equals(Role.SUPERADMIN)) {
@@ -222,7 +222,7 @@ public class UserController {
                     redirectAttributes.addFlashAttribute("message", permissionDenied);
                 }
             }
-            userService.update(user);
+            UserService.update(user);
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -236,7 +236,7 @@ public class UserController {
         try {
             final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             final User doer = currentUser.getUser();
-            User user = userService.getUserById(id)
+            User user = UserService.getUserById(id)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
 
             if (doer.getRole().equals(Role.SUPERADMIN)) {
@@ -272,20 +272,12 @@ public class UserController {
                 }
             }
 
-            userService.update(user);
+            UserService.update(user);
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
         }
         return "redirect:/users";
     }
 
-    @Override
-    public String toString() {
-        return "UserController{" +
-                "userService=" + userService +
-                ", notificationService=" + notificationService +
-                ", changePasswordValidator=" + changePasswordValidator +
-                '}';
-    }
 }
 

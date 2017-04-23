@@ -9,9 +9,6 @@ import com.zespolowka.forms.NewMessageForm;
 import com.zespolowka.forms.SolutionTaskForm;
 import com.zespolowka.forms.SolutionTestForm;
 import com.zespolowka.repository.SolutionTestRepository;
-import com.zespolowka.service.inteface.NotificationService;
-import com.zespolowka.service.inteface.SolutionTestService;
-import com.zespolowka.service.inteface.UserService;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -35,7 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class SolutionTestServiceImpl implements SolutionTestService {
+public class SolutionTestService {
     private static final Logger logger = LoggerFactory.getLogger(SolutionTestService.class);
     private static final String OUTPUT = "output.json";
     private static final String CONFIG = "config.json";
@@ -44,7 +41,7 @@ public class SolutionTestServiceImpl implements SolutionTestService {
     private final HttpSession httpSession;
     private final NotificationService notificationService;
     private final Environment environment;
-    private final UserService userService;
+    private final UserService UserService;
 
     private int taskNo = 0;
 
@@ -53,40 +50,31 @@ public class SolutionTestServiceImpl implements SolutionTestService {
     private String resultDir = "/tmp/";
 
     @Autowired
-    public SolutionTestServiceImpl(SolutionTestRepository solutionTestRepository, HttpSession httpSession, NotificationService notificationService, Environment environment, UserService userService) {
+    public SolutionTestService(SolutionTestRepository solutionTestRepository, HttpSession httpSession, NotificationService notificationService, Environment environment, UserService UserService) {
         this.solutionTestRepository = solutionTestRepository;
         this.httpSession = httpSession;
         this.notificationService = notificationService;
         this.environment = environment;
-        this.userService = userService;
+        this.UserService = UserService;
     }
 
     public Integer countSolutionTestsByTestAndSolutionStatus(Test test, SolutionStatus solutionStatus) {
         return solutionTestRepository.countSolutionTestsByTestAndSolutionStatus(test, solutionStatus);
     }
 
-    @Override
     public List<SolutionTest> getSolutionsWithTheBestResult(User user) {
         return solutionTestRepository.getSolutionsWithTheBestResult(user, SolutionStatus.FINISHED);
     }
 
-    @Override
-    public Collection<SolutionTest> getSolutionTestsByUserAndTest(User user, Test test) {
-        return solutionTestRepository.findSolutionTestsByUserAndTestAndSolutionStatus(user, test, SolutionStatus.FINISHED);
-    }
-
-    @Override
     public Integer countSolutionTestsByUserAndTest(User user, Test test) {
         return solutionTestRepository.countSolutionTestsByUserAndTestAndSolutionStatus(user, test, SolutionStatus.FINISHED);
     }
 
-    @Override
     public SolutionTest getSolutionTestById(long id) {
         return solutionTestRepository.findSolutionTestById(id);
     }
 
 
-    @Override
     public SolutionTest create(SolutionTest solutionTest, SolutionStatus solutionStatus) {
         try {
             taskNo = 0;
@@ -100,7 +88,7 @@ public class SolutionTestServiceImpl implements SolutionTestService {
                 newMessageForm.setReceivers(solutionTest.getUser().getEmail());
                 newMessageForm.setTopic(messages.getString("results.topic") + " " + solutionTest.getTest().getName());
                 newMessageForm.setMessage(messages.getString("results.message") + " " + solutionTest.getPoints() + " / " + solutionTest.getTest().getMaxPoints());
-                User system = userService.getUserById(1L)
+                User system = UserService.getUserById(1L)
                         .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", 1)));
                 newMessageForm.setSender(system);
                 notificationService.sendMessage(newMessageForm);
@@ -114,7 +102,6 @@ public class SolutionTestServiceImpl implements SolutionTestService {
         return solutionTestRepository.saveAndFlush(solutionTest);
     }
 
-    @Override
     public SolutionTestForm createForm(Test test, User user) {
         SolutionTestForm solutionTestForm = new SolutionTestForm();
         try {
@@ -176,7 +163,7 @@ public class SolutionTestServiceImpl implements SolutionTestService {
                 TaskClosed taskClo = (TaskClosed) taskSol.getTask();
                 Map<String, Boolean> userAnswers = taskSol.getAnswers();
                 Map<String, Boolean> correctAnswers = taskClo.getAnswers();
-                if (taskClo.getCountingType() == taskClo.WRONG_RESET) {
+                if (taskClo.getCountingType() == TaskClosed.WRONG_RESET) {
                     Boolean theSame = true;
                     for (Map.Entry<String, Boolean> stringBooleanEntry : userAnswers.entrySet()) {
                         if (stringBooleanEntry.getValue() == null) {
@@ -387,22 +374,18 @@ public class SolutionTestServiceImpl implements SolutionTestService {
         return solutionTest;
     }
 
-    @Override
     public Collection<SolutionTest> getSolutionTestsByUser(User user) {
         return solutionTestRepository.findSolutionTestsByUserAndSolutionStatus(user, SolutionStatus.FINISHED);
     }
 
-    @Override
     public Collection<SolutionTest> getSolutionTestsByTest(Test test) {
         return solutionTestRepository.findSolutionTestsByTestAndSolutionStatusOrderByPointsDesc(test, SolutionStatus.FINISHED);
     }
 
-    @Override
     public Optional<SolutionTest> findSolutionTestByTestAndUserAndSolutionStatus(Test test, User user, SolutionStatus solutionStatus) {
         return solutionTestRepository.findSolutionTestByTestAndUserAndSolutionStatus(test, user, solutionStatus);
     }
 
-    @Override
     public SolutionTestForm createFormWithExistingSolution(SolutionTest solutionTest) {
         this.taskNo = 0;
         SolutionTestForm solutionTestForm = new SolutionTestForm();

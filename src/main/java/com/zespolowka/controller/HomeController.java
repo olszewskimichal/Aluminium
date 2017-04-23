@@ -1,7 +1,7 @@
 package com.zespolowka.controller;
 
-import com.zespolowka.service.inteface.SolutionTestService;
-import com.zespolowka.service.inteface.TestService;
+import com.zespolowka.service.SolutionTestService;
+import com.zespolowka.service.TestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,4 @@ public class HomeController {
         return "index";
     }
 
-    @Override
-    public String toString() {
-        return "HomeController{" +
-                "testService=" + testService +
-                ", solutionTestService=" + solutionTestService +
-                '}';
-    }
 }

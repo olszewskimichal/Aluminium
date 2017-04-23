@@ -3,7 +3,7 @@ package com.zespolowka.validators;
 import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.NewMessageForm;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ public class SendMessageValidator implements Validator {
 
     private static final Logger logger = LoggerFactory.getLogger(SendMessageValidator.class);
 
-    private final UserService userService;
+    private final UserService UserService;
 
     @Autowired
-    public SendMessageValidator(UserService userService) {
-        this.userService = userService;
+    public SendMessageValidator(UserService UserService) {
+        this.UserService = UserService;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SendMessageValidator implements Validator {
             for (String s : result) {
                 String st = s.replaceAll("\\s+", "");
                 if (s.contains("@")) {
-                    Optional<User> usr = userService.getUserByEmail(st);
+                    Optional<User> usr = UserService.getUserByEmail(st);
                     if (!usr.isPresent()) {
                         errors.rejectValue("receivers", "notification.receiver_invalid");
                     }
@@ -69,7 +69,7 @@ public class SendMessageValidator implements Validator {
     @Override
     public String toString() {
         return "SendMessageValidator{" +
-                "userService=" + userService +
+                "UserServiceImpl=" + UserService +
                 '}';
     }
 }

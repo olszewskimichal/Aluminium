@@ -1,6 +1,6 @@
 package com.zespolowka;
 
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

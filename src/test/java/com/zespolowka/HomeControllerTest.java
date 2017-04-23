@@ -1,8 +1,8 @@
 package com.zespolowka;
 
 import com.zespolowka.controller.HomeController;
-import com.zespolowka.service.inteface.SolutionTestService;
-import com.zespolowka.service.inteface.TestService;
+import com.zespolowka.service.SolutionTestService;
+import com.zespolowka.service.TestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

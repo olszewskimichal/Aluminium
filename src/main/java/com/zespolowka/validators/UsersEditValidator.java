@@ -4,7 +4,7 @@ import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,7 @@ import org.springframework.validation.Validator;
 
 import java.util.NoSuchElementException;
 
-/**
- * Created by kukol on 2016-04-26.
- */
+
 @Component
 public class UsersEditValidator implements Validator {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateValidator.class);
@@ -60,12 +58,5 @@ public class UsersEditValidator implements Validator {
         } catch (NoSuchElementException e) {
             errors.rejectValue("id", "id_error2");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "UsersEditValidator{" +
-                "userService=" + userService +
-                '}';
     }
 }

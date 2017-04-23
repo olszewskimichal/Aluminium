@@ -2,7 +2,7 @@ package com.zespolowka.controller;
 
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import com.zespolowka.validators.UsersEditValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

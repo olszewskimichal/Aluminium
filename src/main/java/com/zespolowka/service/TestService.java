@@ -15,9 +15,6 @@ import com.zespolowka.forms.ProgrammingTaskForm;
 import com.zespolowka.forms.TaskForm;
 import com.zespolowka.repository.SolutionTestRepository;
 import com.zespolowka.repository.TestRepository;
-import com.zespolowka.service.inteface.NotificationService;
-import com.zespolowka.service.inteface.TestService;
-import com.zespolowka.service.inteface.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,7 @@ import java.util.*;
 import java.util.List;
 
 @Service
-public class TestServiceImpl implements TestService {
+public class TestService {
     private static final Logger logger = LoggerFactory.getLogger(TestService.class);
 
     private final TestRepository testRepository;
@@ -43,28 +40,25 @@ public class TestServiceImpl implements TestService {
 
     private final NotificationService notificationService;
 
-    private final UserService userService;
+    private final UserService UserService;
 
     @Autowired
-    public TestServiceImpl(final TestRepository testRepository, SolutionTestRepository solutionTestRepository, NotificationService notificationService, UserService userService) {
+    public TestService(final TestRepository testRepository, SolutionTestRepository solutionTestRepository, NotificationService notificationService, UserService UserService) {
         this.testRepository = testRepository;
         this.solutionTestRepository = solutionTestRepository;
         this.notificationService = notificationService;
-        this.userService = userService;
+        this.UserService = UserService;
     }
 
 
-    @Override
     public Test getTestById(final long id) {
         return testRepository.findTestById(id);
     }
 
-    @Override
     public Collection<Test> getAllTests() {
         return testRepository.findAll();
     }
 
-    @Override
     public Test create(final CreateTestForm form) {
         Test test = new Test();
         try {
@@ -74,7 +68,7 @@ public class TestServiceImpl implements TestService {
             newMessageForm.setReceivers(Role.USER.name());
             newMessageForm.setTopic(messages.getString("test_created.topic") + " " + test.getName());
             newMessageForm.setMessage(messages.getString("test_created.message"));
-            User system = userService.getUserById(1L)
+            User system = UserService.getUserById(1L)
                     .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", 1)));
             logger.info("SYS:{}", system);
             newMessageForm.setSender(system);
@@ -87,7 +81,6 @@ public class TestServiceImpl implements TestService {
         return testRepository.save(test);
     }
 
-    @Override
     public Test update(CreateTestForm form, Long id) {
         Test test = new Test();
         Test test1 = new Test();
@@ -113,7 +106,6 @@ public class TestServiceImpl implements TestService {
         return testRepository.save(test1);
     }
 
-    @Override
     @Transactional
     public void delete(Long id) {
         solutionTestRepository.deleteSolutionTestsByTest(testRepository.findTestById(id));
@@ -125,7 +117,6 @@ public class TestServiceImpl implements TestService {
         return testRepository.save(test);
     }
 
-    @Override
     public CreateTestForm createForm(Test test) {
         CreateTestForm createTestForm = new CreateTestForm();
         try {
@@ -278,17 +269,14 @@ public class TestServiceImpl implements TestService {
         return test;
     }
 
-    @Override
     public Collection<Test> getTestByEndDateBefore(LocalDate date) {
         return testRepository.findByEndDateBefore(date);
     }
 
-    @Override
     public Collection<Test> getTestByEndDateAfter(LocalDate date) {
         return testRepository.findByEndDateAfter(date);
     }
 
-    @Override
     public void createPDF(File file, String title, String header[], String body[][]) {
 
         logger.info("createPDF");

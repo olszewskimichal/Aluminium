@@ -3,7 +3,7 @@ package com.zespolowka.controller;
 import com.zespolowka.entity.Notification;
 import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.forms.NewMessageForm;
-import com.zespolowka.service.inteface.NotificationService;
+import com.zespolowka.service.NotificationService;
 import com.zespolowka.validators.SendMessageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,13 +84,5 @@ public class NotificationController {
             model.addAttribute("newMessageForm", new NewMessageForm());
             return "sendMessage";
         }
-    }
-
-    @Override
-    public String toString() {
-        return "NotificationController{" +
-                "notificationService=" + notificationService +
-                ", sendMessageValidator=" + sendMessageValidator +
-                '}';
     }
 }

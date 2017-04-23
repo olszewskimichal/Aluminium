@@ -2,7 +2,7 @@ package com.zespolowka.config;
 
 
 import com.zespolowka.entity.user.User;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
     @Autowired
-    private UserService userService;
+    private UserService UserService;
 
     public CustomAuthenticationSuccessHandler() {
     }
@@ -31,17 +31,17 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         super.onAuthenticationSuccess(httpServletRequest, httpServletResponse, authentication);
         String email = httpServletRequest.getParameter("username");
         logger.info("Pomyslne logowanie uzytkownika " + email);
-        User user = userService.getUserByEmail(email)
+        User user = UserService.getUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
         user.setLogin_tries(3);
-        userService.update(user);
+        UserService.update(user);
     }
 
 
     @Override
     public String toString() {
         return "CustomAuthenticationSuccessHandler{" +
-                "userService=" + userService +
+                "UserServiceImpl=" + UserService +
                 '}';
     }
 }

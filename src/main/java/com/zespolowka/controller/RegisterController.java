@@ -3,9 +3,9 @@ package com.zespolowka.controller;
 import com.zespolowka.entity.VerificationToken;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserCreateForm;
-import com.zespolowka.service.inteface.SendMailService;
-import com.zespolowka.service.inteface.UserService;
-import com.zespolowka.service.inteface.VerificationTokenService;
+import com.zespolowka.service.SendMailService;
+import com.zespolowka.service.UserService;
+import com.zespolowka.service.VerificationTokenService;
 import com.zespolowka.validators.UserCreateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class RegisterController {
     private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     @Autowired
-    private UserService userService;
+    private UserService UserService;
 
     @Autowired
     private UserCreateValidator userCreateValidator;
@@ -69,7 +69,7 @@ public class RegisterController {
             model.addAttribute("userCreateForm", userCreateForm);
             return "register";
         } else {
-            User user = userService.create(userCreateForm);
+            User user = UserService.create(userCreateForm);
             String token = UUID.randomUUID().toString();
             VerificationToken verificationToken = verificationTokenService.create(user, token);
             String url = servletRequest.getRequestURL().toString() + "/registrationConfirm?token=" + verificationToken.getToken();
@@ -102,13 +102,13 @@ public class RegisterController {
             } else {
                 logger.info("Token jest aktualny - aktywacja konta");
                 user.setEnabled(true);
-                userService.update(user);
+                UserService.update(user);
                 model.addAttribute("aktualny", true);
                 verificationTokenService.deleteVerificationTokenByUser(user);
                 return "login";
             }
         } catch (Exception e) {
-            logger.info(token.toString());
+            logger.info(token);
             logger.info(e.getMessage(), e);
             logger.info(verificationToken.toString());
 
@@ -116,13 +116,4 @@ public class RegisterController {
         return "login";
     }
 
-    @Override
-    public String toString() {
-        return "RegisterController{" +
-                "userService=" + userService +
-                ", userCreateValidator=" + userCreateValidator +
-                ", verificationTokenService=" + verificationTokenService +
-                ", sendMailService=" + sendMailService +
-                '}';
-    }
 }

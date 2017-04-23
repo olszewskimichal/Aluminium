@@ -4,7 +4,7 @@ import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,11 @@ import org.springframework.validation.Validator;
 public class UserEditValidator implements Validator {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateValidator.class);
 
-    private final UserService userService;
+    private final UserService UserService;
 
     @Autowired
-    public UserEditValidator(UserService userService) {
-        this.userService = userService;
+    public UserEditValidator(UserService UserService) {
+        this.UserService = UserService;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserEditValidator implements Validator {
             errors.rejectValue("password", "password_error");
         }
         if (!user.getEmail().equals(form.getEmail())) {
-            if (userService.getUserByEmail(form.getEmail()).isPresent()) {
+            if (UserService.getUserByEmail(form.getEmail()).isPresent()) {
                 errors.rejectValue("email", "email_error");
             }
         }
@@ -59,7 +59,7 @@ public class UserEditValidator implements Validator {
     @Override
     public String toString() {
         return "UserEditValidator{" +
-                "userService=" + userService +
+                "UserServiceImpl=" + UserService +
                 '}';
     }
 }

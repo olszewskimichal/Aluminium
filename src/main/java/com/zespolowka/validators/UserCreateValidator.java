@@ -1,7 +1,7 @@
 package com.zespolowka.validators;
 
 import com.zespolowka.forms.UserCreateForm;
-import com.zespolowka.service.inteface.UserService;
+import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import org.springframework.validation.Validator;
 public class UserCreateValidator implements Validator {
     private static final Logger logger = LoggerFactory.getLogger(UserCreateValidator.class);
 
-    private final UserService userService;
+    private final UserService UserService;
 
     @Autowired
-    public UserCreateValidator(UserService userService) {
-        this.userService = userService;
+    public UserCreateValidator(UserService UserService) {
+        this.UserService = UserService;
     }
 
 
@@ -38,7 +38,7 @@ public class UserCreateValidator implements Validator {
             errors.rejectValue("password", "password_error");
         }
 
-        if (userService.getUserByEmail(form.getEmail()).isPresent()) {
+        if (UserService.getUserByEmail(form.getEmail()).isPresent()) {
             errors.rejectValue("email", "email_error");
         }
     }
@@ -46,7 +46,7 @@ public class UserCreateValidator implements Validator {
     @Override
     public String toString() {
         return "UserCreateValidator{" +
-                "userService=" + userService +
+                "UserServiceImpl=" + UserService +
                 '}';
     }
 }
