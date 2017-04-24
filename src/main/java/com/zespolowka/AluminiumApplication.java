@@ -12,7 +12,6 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 @SpringBootApplication
 @ComponentScan
 @EnableCaching
-
 public class AluminiumApplication {
     private static final Logger logger = LoggerFactory.getLogger(AluminiumApplication.class);
 
