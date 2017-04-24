@@ -12,7 +12,7 @@ public class TaskSolution {
     private Long id;
     private Float points;
 
-    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Task task;
 
     public TaskSolution() {

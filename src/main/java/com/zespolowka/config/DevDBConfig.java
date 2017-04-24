@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import static com.zespolowka.entity.createTest.TaskClosed.*;
+
 @Configuration
 @Profile("!prod")
 public class DevDBConfig {
@@ -100,7 +102,7 @@ public class DevDBConfig {
         taskClosed.setAnswers(answer);
         test.addTaskToTest(taskClosed);
         taskClosed = new TaskClosed("Zaznacz wszystko", 6.0f);
-        taskClosed.setCountingType(taskClosed.COUNT_NOT_FULL);
+        taskClosed.setCountingType(COUNT_NOT_FULL);
         answer = new TreeMap<>();
         answer.put("1", true);
         answer.put("2", true);

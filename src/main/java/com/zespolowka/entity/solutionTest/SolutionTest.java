@@ -18,7 +18,7 @@ public class SolutionTest {
     @GeneratedValue
     private Long id;
 
-    @OneToOne(targetEntity = Test.class, optional = true, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = Test.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "idTest")
     private Test test;
     private Integer attempt;
@@ -46,16 +46,6 @@ public class SolutionTest {
         this.test = test;
         this.points = 0.0f;
         this.user = user;
-    }
-
-    public SolutionTest(Test test, Integer attempt, LocalDateTime beginSolution, LocalDateTime endSolution, Float points) {
-        this.solutionTasks = new ArrayList<>();
-        this.solutionStatus = SolutionStatus.OPEN;
-        this.test = test;
-        this.attempt = attempt;
-        this.beginSolution = beginSolution;
-        this.endSolution = endSolution;
-        this.points = points;
     }
 
     public Long secondsToEnd() {
@@ -137,18 +127,4 @@ public class SolutionTest {
         this.solutionStatus = solutionStatus;
     }
 
-    @Override
-    public String toString() {
-        return "SolutionTest{" +
-                "attempt=" + attempt +
-                ", id=" + id +
-                ", test=" + test +
-                ", beginSolution=" + beginSolution +
-                ", endSolution=" + endSolution +
-                ", points=" + points +
-                ", user=" + user +
-                ", solutionStatus=" + solutionStatus +
-                ", solutionTasks=" + solutionTasks +
-                '}';
-    }
 }

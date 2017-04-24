@@ -77,13 +77,4 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         }
         request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, errorMessage);
     }
-
-    @Override
-    public String toString() {
-        return "CustomAuthenticationFailureHandler{" +
-                "messages=" + messages +
-                ", localeResolver=" + localeResolver +
-                ", UserServiceImpl=" + UserService +
-                '}';
-    }
 }

@@ -14,25 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.WebUtils;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-/**
- * Created by Pitek on 2015-12-10.
- */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -43,14 +26,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler = new CustomAuthenticationFailureHandler();
+    private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler = new CustomAuthenticationSuccessHandler();
-
-
-    public WebSecurityConfig() {
-    }
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
 
 
     @Override
@@ -60,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http
                 .authorizeRequests()
-                .antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword", "/login-expired")
+                .antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword",
+                        "/login-expired")
                 .permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and()
@@ -81,11 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .maximumSessions(1).expiredUrl("/login-expired")
-                .and()
-                .and().addFilterBefore(filter, CsrfFilter.class)
-                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
-                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
-
+                .and().and()
+                .csrf().disable();
     }
 
     @Override
@@ -95,42 +72,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
 
-    private Filter csrfHeaderFilter() {
-        return new OncePerRequestFilter() {
-            @Override
-            protected void doFilterInternal(HttpServletRequest request,
-                                            HttpServletResponse response, FilterChain filterChain)
-                    throws ServletException, IOException {
-                CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class
-                        .getName());
-                if (csrf != null) {
-                    Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
-                    String token = csrf.getToken();
-                    if (cookie == null || token != null
-                            && !token.equals(cookie.getValue())) {
-                        cookie = new Cookie("XSRF-TOKEN", token);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                    }
-                }
-                filterChain.doFilter(request, response);
-            }
-        };
-    }
 
-    private CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName("X-XSRF-TOKEN");
-        return repository;
-    }
-
-
-    @Override
-    public String toString() {
-        return "WebSecurityConfig{" +
-                "userDetailsService=" + userDetailsService +
-                ", authenticationFailureHandler=" + authenticationFailureHandler +
-                ", authenticationSuccessHandler=" + authenticationSuccessHandler +
-                '}';
-    }
 }

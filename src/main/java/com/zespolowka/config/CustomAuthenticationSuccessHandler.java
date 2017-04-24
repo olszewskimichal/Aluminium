@@ -5,7 +5,6 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,10 +19,10 @@ import java.io.IOException;
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
-    @Autowired
-    private UserService UserService;
+    private final UserService userService;
 
-    public CustomAuthenticationSuccessHandler() {
+    public CustomAuthenticationSuccessHandler(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -31,17 +30,11 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         super.onAuthenticationSuccess(httpServletRequest, httpServletResponse, authentication);
         String email = httpServletRequest.getParameter("username");
         logger.info("Pomyslne logowanie uzytkownika " + email);
-        User user = UserService.getUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format("Uzytkownik z mailem=%s nie istnieje", email)));
         user.setLogin_tries(3);
-        UserService.update(user);
+        userService.update(user);
     }
 
-
-    @Override
-    public String toString() {
-        return "CustomAuthenticationSuccessHandler{" +
-                "UserServiceImpl=" + UserService +
-                '}';
-    }
 }
