@@ -8,10 +8,8 @@ import com.zespolowka.repository.NotificationRepository;
 import com.zespolowka.repository.SolutionTestRepository;
 import com.zespolowka.repository.TestRepository;
 import com.zespolowka.repository.UserRepository;
-import com.zespolowka.service.SolutionTestService;
 import com.zespolowka.service.VerificationTokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -29,8 +27,8 @@ import static com.zespolowka.entity.createTest.TaskClosed.COUNT_NOT_FULL;
 
 @Configuration
 @Profile("!prod")
+@Slf4j
 public class DevDBConfig {
-    private static final Logger logger = LoggerFactory.getLogger(DevDBConfig.class);
 
     @Autowired
     private UserRepository repository;
@@ -47,9 +45,6 @@ public class DevDBConfig {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
-    @Autowired
-    private SolutionTestService solutionTestService;
-
     private User user;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
@@ -59,9 +54,9 @@ public class DevDBConfig {
 
     @PostConstruct
     public void populateDatabase() throws ParseException {
-        logger.info("ładowanie bazy testowej");
+        log.info("ładowanie bazy testowej");
         User system = new User("SYSTEM", "SYSTEM", "SYSTEM", new BCryptPasswordEncoder().encode("SYSTEM"));
-        system = repository.save(system);
+        repository.save(system);
         User user = new User("Uzytkownik", "Ambitny", "aaa1@o2.pl", new BCryptPasswordEncoder().encode("aaa"));
         user.setEnabled(true);
         repository.save(user);

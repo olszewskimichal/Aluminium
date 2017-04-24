@@ -9,8 +9,7 @@ import com.zespolowka.service.NotificationService;
 import com.zespolowka.service.UserService;
 import com.zespolowka.validators.ChangePasswordValidator;
 import com.zespolowka.validators.UserEditValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,9 +33,8 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping(value = "/user")
+@Slf4j
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     private final UserService UserService;
 
     @Autowired
@@ -62,22 +60,22 @@ public class UserController {
     @PreAuthorize("@currentUserServiceImpl.canAccessUser(principal, #id)")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String showUserDetail(@PathVariable final Long id, final Model model) {
-        logger.info("nazwa metody = showUserDetail");
+        log.info("nazwa metody = showUserDetail");
         try {
             final User user = UserService.getUserById(id)
                     .orElseThrow(
                             () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute(user);
         } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
-            logger.info("{}" + '\n' + "{}", id.toString(), model);
+            log.error(e.getMessage(), e);
+            log.info("{}" + '\n' + "{}", id.toString(), model);
         }
         return "userDetail";
     }
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String showCurrentUserDetail(final Model model) {
-        logger.info("nazwa metody = showCurrentUserDetail");
+        log.info("nazwa metody = showCurrentUserDetail");
         try {
             final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                     .getAuthentication()
@@ -87,7 +85,7 @@ public class UserController {
             model.addAttribute("Notifications",
                     notificationService.findTop5ByUserIdOrUserRoleOrderByDateDesc(user.getId(), user.getRole()));
         } catch (final RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "userDetail";
     }
@@ -95,7 +93,7 @@ public class UserController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editCurrentUserDetail(final Model model) {
-        logger.info("nazwa metody = showCurrentUserDetail");
+        log.info("nazwa metody = showCurrentUserDetail");
         try {
             final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                     .getAuthentication()
@@ -103,19 +101,19 @@ public class UserController {
             final User user = currentUser.getUser();
             model.addAttribute("userEditForm", new UserEditForm(user));
         } catch (final RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "userEdit";
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String saveCurrentUser(@ModelAttribute @Valid final UserEditForm userEditForm, final Errors errors, final Model model) {
-        logger.info("nazwa metody = saveCurrentUser");
+        log.info("nazwa metody = saveCurrentUser");
         changePasswordValidator.validate(userEditForm, errors);
         userEditValidator.validate(userEditForm, errors);
         if (errors.hasErrors()) {
             String err = errors.getAllErrors().get(0).toString();
-            logger.info("err:{}", err);
+            log.info("err:{}", err);
             return "userEdit";
         } else {
             final User user = UserService.editUser(userEditForm);
@@ -131,14 +129,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editUser(@PathVariable final Integer id, final Model model) {
-        logger.debug("nazwa metody = editUser");
+        log.debug("nazwa metody = editUser");
         try {
             model.addAttribute("userEditForm", new UserEditForm(UserService.getUserById(id)
                     .orElseThrow(
                             () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)))));
         } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
-            logger.info("{}" + '\n' + "{}" + '\n' + "{}", id.toString(), model, UserService.getUserById(id));
+            log.error(e.getMessage(), e);
+            log.info("{}" + '\n' + "{}" + '\n' + "{}", id.toString(), model, UserService.getUserById(id));
         }
         return "userEdit";
     }
@@ -147,7 +145,7 @@ public class UserController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
     public String saveUser(@PathVariable final Integer id, @ModelAttribute @Valid final UserEditForm userEditForm,
                            final Errors errors) {
-        logger.info("nazwa metody = saveUser");
+        log.info("nazwa metody = saveUser");
         if (errors.hasErrors()) {
             return "userEdit";
         } else {
@@ -163,10 +161,10 @@ public class UserController {
         final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
-        logger.info("nazwa metody = deleteUser");
-        logger.info("userDelete{}", id);
+        log.info("nazwa metody = deleteUser");
+        log.info("userDelete{}", id);
         if (Objects.equals(currentUser.getId(), id)) {
-            logger.info("Nie mozesz usunac siebie");
+            log.info("Nie mozesz usunac siebie");
             redirectAttributes.addFlashAttribute("blad", true);
             redirectAttributes.addFlashAttribute("message", "Nie mozesz usunac siebie");
         } else {
@@ -174,7 +172,7 @@ public class UserController {
                     .orElseThrow(
                             () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             if (currentUser.getRole().name().equals("ADMIN") && user.getRole().name().equals("SUPERADMIN")) {
-                logger.info("Nie mozesz usunac SA");
+                log.info("Nie mozesz usunac SA");
                 redirectAttributes.addFlashAttribute("blad", true);
                 redirectAttributes.addFlashAttribute("message", "Nie mozesz usunac SA");
             } else {
@@ -193,7 +191,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/changeBlock/{id}", method = RequestMethod.GET)
     public String unblockUser(@PathVariable final Integer id, RedirectAttributes redirectAttributes) {
-        logger.debug("nazwa metody = unblockUser");
+        log.debug("nazwa metody = unblockUser");
         final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -238,7 +236,7 @@ public class UserController {
             }
             UserService.update(user);
         } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "redirect:/users";
     }
@@ -246,7 +244,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/changeActive/{id}", method = RequestMethod.GET)
     public String activateUser(@PathVariable final Integer id, RedirectAttributes redirectAttributes) {
-        logger.debug("nazwa metody = activateUser");
+        log.debug("nazwa metody = activateUser");
         try {
             final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                     .getAuthentication()
@@ -291,7 +289,7 @@ public class UserController {
 
             UserService.update(user);
         } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "redirect:/users";
     }

@@ -1,7 +1,6 @@
 package com.zespolowka;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -12,15 +11,15 @@ import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 @SpringBootApplication
 @ComponentScan
 @EnableCaching
+@Slf4j
 public class AluminiumApplication {
-    private static final Logger logger = LoggerFactory.getLogger(AluminiumApplication.class);
 
     public AluminiumApplication() {
     }
 
     public static void main(String... args) {
         SpringApplication.run(AluminiumApplication.class, args);
-        logger.info("Aplikacja uruchomiona");
+        log.info("Aplikacja uruchomiona");
     }
 
     @Bean

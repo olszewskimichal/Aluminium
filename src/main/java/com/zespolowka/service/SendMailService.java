@@ -1,8 +1,7 @@
 package com.zespolowka.service;
 
 import com.zespolowka.entity.user.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,8 +16,8 @@ import java.security.SecureRandom;
  * Created by Pitek on 2016-02-17.
  */
 @Service
+@Slf4j
 public class SendMailService {
-    private static final Logger logger = LoggerFactory.getLogger(SendMailService.class);
 
     private final JavaMailSender mailSender;
     private final MimeMessage mimeMessage;
@@ -47,7 +46,7 @@ public class SendMailService {
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -70,11 +69,11 @@ public class SendMailService {
                     "<html><body><h4>Witaj " + user.getName() + "!</h4><p>Twoje nowe hasło to: " + newPassword + "</p></body></html>",
                     true);
             mailSender.send(mimeMessage);
-            logger.info("Reminder sent", newPassword);
+            log.info("Reminder sent", newPassword);
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

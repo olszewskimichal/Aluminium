@@ -15,8 +15,7 @@ import com.zespolowka.forms.ProgrammingTaskForm;
 import com.zespolowka.forms.TaskForm;
 import com.zespolowka.repository.SolutionTestRepository;
 import com.zespolowka.repository.TestRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,9 +30,8 @@ import java.util.*;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TestService {
-    private static final Logger logger = LoggerFactory.getLogger(TestService.class);
-
     private final TestRepository testRepository;
 
     private final SolutionTestRepository solutionTestRepository;
@@ -71,13 +69,13 @@ public class TestService {
             User system = UserService.getUserById(1L)
                     .orElseThrow(
                             () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", 1)));
-            logger.info("SYS:{}", system);
+            log.info("SYS:{}", system);
             newMessageForm.setSender(system);
             notificationService.sendMessage(newMessageForm);
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            logger.info(test.toString());
-            logger.info(form.toString());
+            log.info(e.getMessage(), e);
+            log.info(test.toString());
+            log.info(form.toString());
         }
         return testRepository.save(test);
     }
@@ -98,11 +96,11 @@ public class TestService {
             test1.setName(test.getName());
             test1.setMessageFAQ(test.getMessageFAQ());
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            logger.info(test.toString());
-            logger.info(test1.toString());
-            logger.info(form.toString());
-            logger.info(id.toString());
+            log.info(e.getMessage(), e);
+            log.info(test.toString());
+            log.info(test1.toString());
+            log.info(form.toString());
+            log.info(id.toString());
         }
         return testRepository.save(test1);
     }
@@ -192,9 +190,9 @@ public class TestService {
             }
             createTestForm.setTasks(taskForms);
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            logger.info(test.toString());
-            logger.info(createTestForm.toString());
+            log.info(e.getMessage(), e);
+            log.info(test.toString());
+            log.info(createTestForm.toString());
         }
         return createTestForm;
     }
@@ -253,7 +251,7 @@ public class TestService {
                                     taskProgrammingDetail.setSolutionClassName(
                                             programmingTaskForm.getSolutionClassName());
                                     taskProgrammingDetail.setTestClassName(programmingTaskForm.getTestClassName());
-                                    taskProgramming.addTaskkProgrammingDetail(taskProgrammingDetail);
+                                    taskProgramming.addTaskProgrammingDetail(taskProgrammingDetail);
                                 });
                         test.addTaskToTest(taskProgramming);
                         break;
@@ -269,9 +267,9 @@ public class TestService {
                 }
             }
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            logger.info(test.toString());
-            logger.info(form.toString());
+            log.info(e.getMessage(), e);
+            log.info(test.toString());
+            log.info(form.toString());
         }
         return test;
     }
@@ -286,7 +284,7 @@ public class TestService {
 
     public void createPDF(File file, String title, String header[], String body[][]) {
 
-        logger.info("createPDF");
+        log.info("createPDF");
         Document documento = new Document();
         float[] columnWidths = new float[]{15.0f, 30.0f, 30.0f, 15.0f, 40.0f};
         try {
@@ -324,7 +322,7 @@ public class TestService {
             fop.flush();
             fop.close();
         } catch (Exception e) {
-            logger.info("PDF BLAD{}", e.getMessage());
+            log.info("PDF BLAD{}", e.getMessage());
         }
     }
 

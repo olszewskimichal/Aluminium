@@ -9,9 +9,8 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.SolutionTestForm;
 import com.zespolowka.service.SolutionTestService;
 import com.zespolowka.service.TestService;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,8 +27,9 @@ import java.util.Optional;
 
 
 @Controller
+@Slf4j
 public class SolutionTestController {
-    private static final Logger logger = LoggerFactory.getLogger(SolutionTestController.class);
+
     private static final String TEST_ATTRIBUTE_NAME = "TestId";
     @Autowired
     private HttpSession httpSession;
@@ -38,13 +38,11 @@ public class SolutionTestController {
     @Autowired
     private TestService testService;
 
-    public SolutionTestController() {
-    }
 
     @RequestMapping(value = "/getSolutionTest", method = RequestMethod.POST)
     public String getSolutionTestPage(@RequestParam(value = "id", required = true) Integer id,
                                       @RequestParam(value = "pass", required = false) String password, final RedirectAttributes redirectAttributes) {
-        logger.info("getSoltutionTestPage dla testu o id={}", id);
+        log.info("getSoltutionTestPage dla testu o id={}", id);
         Test test = testService.getTestById(id);
         if (test.isOpenTest()) {
             this.httpSession.setAttribute(TEST_ATTRIBUTE_NAME, test.getId());
@@ -99,7 +97,7 @@ public class SolutionTestController {
 
     @RequestMapping(value = "/solutionTest", method = RequestMethod.POST)
     public String saveSolutionTest(SolutionTestForm solutionTestForm, final RedirectAttributes redirectAttributes) throws IOException, ParseException {
-        logger.info("Metoda - saveSolutionTest");
+        log.info("Metoda - saveSolutionTest");
         Long id = (Long) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
         Test test = testService.getTestById(id);
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -122,7 +120,7 @@ public class SolutionTestController {
     @RequestMapping(value = "/solutionTest/save", method = RequestMethod.POST)
     public String saveTmpSolutionTest(SolutionTestForm solutionTestForm, Model model) throws
             IOException, ParseException {
-        logger.info("Metoda - saveTmpSolutionTest");
+        log.info("Metoda - saveTmpSolutionTest");
         Long id = (Long) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
         Test test = testService.getTestById(id);
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -147,7 +145,7 @@ public class SolutionTestController {
     @RequestMapping(value = "/solutionTestAfterTime", method = RequestMethod.POST)
     public String saveSolutionTestAfterTime(SolutionTestForm solutionTestForm, Model model) throws
             IOException, ParseException {
-        logger.info("Metoda - saveSolutionTestAfterTime");
+        log.info("Metoda - saveSolutionTestAfterTime");
         Long id = (Long) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
         Test test = testService.getTestById(id);
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -199,7 +197,7 @@ public class SolutionTestController {
     @ResponseBody
     @RequestMapping(value = "/solutionTest/loadResultEntity/{id}", method = RequestMethod.GET)
     public List<SolutionTest> loadResultEntity(@PathVariable("id") Long id) {
-        logger.info("metoda=SolutionTestController.loadResultEntity");
+        log.info("metoda=SolutionTestController.loadResultEntity");
         return (List<SolutionTest>) solutionTestService.getSolutionTestsByTest(testService.getTestById(id));
     }
 
@@ -207,7 +205,7 @@ public class SolutionTestController {
     public String changeTestDate(@RequestParam(value = "id", required = true) Integer id,
                                  @RequestParam(value = "date", required = true) String date,
                                  final RedirectAttributes redirectAttributes) {
-        logger.info("setTestDate dla testu o id={}; date={}", id, date);
+        log.info("setTestDate dla testu o id={}; date={}", id, date);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date2 = LocalDate.parse(date, formatter);
@@ -230,7 +228,7 @@ public class SolutionTestController {
 
     @RequestMapping(value = "/showResults", method = RequestMethod.GET)
     public String showCurrentUserTests(final Model model) {
-        logger.info("nazwa metody = showCurrentUserTests");
+        log.info("nazwa metody = showCurrentUserTests");
         try {
             final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
                     .getAuthentication()
@@ -239,7 +237,7 @@ public class SolutionTestController {
             model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
             model.addAttribute("BestTest", solutionTestService.getSolutionsWithTheBestResult(user));
         } catch (final RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "userTests";
     }

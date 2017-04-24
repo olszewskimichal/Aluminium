@@ -1,5 +1,7 @@
 package com.zespolowka.entity.createTest;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 
 @Entity
 @javax.persistence.Table(name = "TestTable")
+@Data
 public class Test {
     @GeneratedValue
     @Id
@@ -55,99 +58,4 @@ public class Test {
         this.maxPoints += points;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getMessageFAQ() {
-        return messageFAQ;
-    }
-
-    public void setMessageFAQ(final String messageFAQ) {
-        this.messageFAQ = messageFAQ;
-    }
-
-    public Long getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(final Long attempts) {
-        this.attempts = attempts;
-    }
-
-    public LocalDate getBeginDate() {
-        return beginDate;
-    }
-
-    public void setBeginDate(final LocalDate beginDate) {
-        this.beginDate = beginDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public Float getMaxPoints() {
-        return maxPoints;
-    }
-
-    public void setMaxPoints(Float maxPoints) {
-        this.maxPoints = maxPoints;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Integer getTimePerAttempt() {
-        return timePerAttempt;
-    }
-
-    public void setTimePerAttempt(Integer timePerAttempt) {
-        this.timePerAttempt = timePerAttempt;
-    }
-
-    @Override
-    public String toString() {
-        return "Test{" +
-                "attempts=" + attempts +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", messageFAQ='" + messageFAQ + '\'' +
-                ", beginDate=" + beginDate +
-                ", endDate=" + endDate +
-                ", maxPoints=" + maxPoints +
-                ", password='" + password + '\'' +
-                ", timePerAttempt=" + timePerAttempt +
-                ", tasks=" + tasks +
-                '}';
-    }
 }

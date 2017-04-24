@@ -1,8 +1,13 @@
 package com.zespolowka.forms;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by Admin on 2016-04-12.
  */
+@Data
+@NoArgsConstructor
 public class ProgrammingTaskForm implements Comparable<ProgrammingTaskForm> {
     private String language;
     private String restrictedList;
@@ -20,67 +25,6 @@ public class ProgrammingTaskForm implements Comparable<ProgrammingTaskForm> {
         this.language = language;
         this.hidden = hidden;
     }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getRestrictedList() {
-        return restrictedList;
-    }
-
-    public void setRestrictedList(String restrictedList) {
-        this.restrictedList = restrictedList;
-    }
-
-    public String getTestCode() {
-        return testCode;
-    }
-
-    public void setTestCode(String testCode) {
-        this.testCode = testCode;
-    }
-
-    public Boolean getHidden() {
-        return hidden;
-    }
-
-    public void setHidden(Boolean hidden) {
-        this.hidden = hidden;
-    }
-
-    public String getTestClassName() {
-        return testClassName;
-    }
-
-    public void setTestClassName(String testClassName) {
-        this.testClassName = testClassName;
-    }
-
-    public String getSolutionClassName() {
-        return solutionClassName;
-    }
-
-    public void setSolutionClassName(String solutionClassName) {
-        this.solutionClassName = solutionClassName;
-    }
-
-    @Override
-    public String toString() {
-        return "ProgrammingTaskForm{" +
-                "language='" + language + '\'' +
-                ", restrictedList='" + restrictedList + '\'' +
-                ", testClassName='" + testClassName + '\'' +
-                ", solutionClassName='" + solutionClassName + '\'' +
-                ", testCode='" + testCode + '\'' +
-                ", hidden='" + hidden + '\'' +
-                '}';
-    }
-
 
     @Override
     public int compareTo(ProgrammingTaskForm o) {

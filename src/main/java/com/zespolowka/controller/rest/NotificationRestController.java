@@ -4,8 +4,7 @@ import com.zespolowka.entity.Notification;
 import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.service.NotificationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
+@Slf4j
 public class NotificationRestController {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationRestController.class);
     private static final int INITIAL_PAGE = 0;
     private static final int MESSAGES_ON_PAGE = 6;
     private final NotificationService notificationService;
@@ -74,7 +73,7 @@ public class NotificationRestController {
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/update/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNotification(@PathVariable("id") Long id, @RequestBody Notification notification) {
-        logger.info("Zaktualizuj wiadomosc o id {}", id);
+        log.info("Zaktualizuj wiadomosc o id {}", id);
         notificationService.changeStatus(id);
     }
 
@@ -82,7 +81,7 @@ public class NotificationRestController {
     @RequestMapping(value = "/updateStatus", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void changeQuantity(@RequestParam(value = "id", required = true) Long id) {
-        logger.info("Zaktualizuj wiadomosc o id {}", id);
+        log.info("Zaktualizuj wiadomosc o id {}", id);
         notificationService.changeStatus(id);
     }
 }

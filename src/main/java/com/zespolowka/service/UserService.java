@@ -4,8 +4,7 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserCreateForm;
 import com.zespolowka.forms.UserEditForm;
 import com.zespolowka.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,8 @@ import java.util.Optional;
  * Created by Admin on 2015-12-01.
  */
 @Service
+@Slf4j
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
 
     private final VerificationTokenService verificationTokenService;
@@ -32,17 +30,17 @@ public class UserService {
     }
 
     public Optional<User> getUserById(long id) {
-        logger.info("Pobieranie uzytkownika o id = {}", id);
+        log.info("Pobieranie uzytkownika o id = {}", id);
         return Optional.ofNullable(userRepository.findOne(id));
     }
 
     public Optional<User> getUserByEmail(String email) {
-        logger.info("Pobieranie uzytkownika o mailu = {}", email);
+        log.info("Pobieranie uzytkownika o mailu = {}", email);
         return userRepository.findUserByEmail(email);
     }
 
     public Collection<User> getAllUsers() {
-        logger.info("Pobieranie wszystkich uzytkownikow");
+        log.info("Pobieranie wszystkich uzytkownikow");
         return (Collection<User>) userRepository.findAll();
     }
 
@@ -58,7 +56,7 @@ public class UserService {
         user.setEmail(form.getEmail());
         user.setPasswordHash(new BCryptPasswordEncoder().encode(form.getPassword()));
         user.setRole(form.getRole());
-        logger.info("Stworzono uzytkownika");
+        log.info("Stworzono uzytkownika");
         return userRepository.save(user);
     }
 
@@ -76,7 +74,7 @@ public class UserService {
         if (!userEditForm.getPassword().isEmpty()) {
             user.setPasswordHash(new BCryptPasswordEncoder().encode(userEditForm.getPassword()));
         }
-        logger.info("Edytowano uzytkownika");
+        log.info("Edytowano uzytkownika");
         return userRepository.save(user);
     }
 

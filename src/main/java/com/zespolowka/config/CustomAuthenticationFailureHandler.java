@@ -2,9 +2,7 @@ package com.zespolowka.config;
 
 import com.zespolowka.entity.user.User;
 import com.zespolowka.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -22,26 +20,24 @@ import java.util.Locale;
 
 
 @Component
+@Slf4j
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationFailureHandler.class);
 
-    @Autowired
-    private MessageSource messages;
+    private final MessageSource messages;
+    private final LocaleResolver localeResolver;
+    private final UserService UserService;
 
-    @Autowired
-    private LocaleResolver localeResolver;
-
-    @Autowired
-    private UserService UserService;
-
-    public CustomAuthenticationFailureHandler() {
+    public CustomAuthenticationFailureHandler(MessageSource messages, LocaleResolver localeResolver, com.zespolowka.service.UserService userService) {
+        this.messages = messages;
+        this.localeResolver = localeResolver;
+        UserService = userService;
     }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
-        logger.info("Bledna autoryzacja uzytkownika");
-        logger.info(exception.getMessage());
+        log.info("Bledna autoryzacja uzytkownika");
+        log.info(exception.getMessage());
         if (exception instanceof BadCredentialsException) {
 
             String email = request.getParameter("username");
@@ -53,15 +49,15 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
                 tries--;
                 if (tries > 0) {
                     user.setLogin_tries(tries);
-                    logger.info("Tries:{}", user.getLogin_tries());
+                    log.info("Tries:{}", user.getLogin_tries());
                     UserService.update(user);
                 } else {
                     user.setAccountNonLocked(false);
                     UserService.update(user);
-                    logger.info("User blocked");
+                    log.info("User blocked");
                 }
             } catch (Exception e) {
-                logger.info(e.getMessage());
+                log.info(e.getMessage());
                 throw new RuntimeException(e);
             }
         }

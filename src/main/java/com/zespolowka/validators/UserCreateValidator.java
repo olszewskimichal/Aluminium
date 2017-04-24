@@ -2,8 +2,7 @@ package com.zespolowka.validators;
 
 import com.zespolowka.forms.UserCreateForm;
 import com.zespolowka.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,8 +12,8 @@ import org.springframework.validation.Validator;
  * Created by Admin on 2015-12-03.
  */
 @Component
+@Slf4j
 public class UserCreateValidator implements Validator {
-    private static final Logger logger = LoggerFactory.getLogger(UserCreateValidator.class);
 
     private final UserService UserService;
 
@@ -31,7 +30,7 @@ public class UserCreateValidator implements Validator {
 
     public void validate(Object target, Errors errors) {
         UserCreateForm form = (UserCreateForm) target;
-        logger.info("Walidacja {}", target);
+        log.info("Walidacja {}", target);
         if (form.getPassword() == null || form.getConfirmPassword() == null)
             errors.rejectValue("password", "password_error");
         else if (!form.getPassword().equals(form.getConfirmPassword())) {

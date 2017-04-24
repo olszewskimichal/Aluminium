@@ -1,7 +1,11 @@
 package com.zespolowka.forms;
 
 import com.zespolowka.entity.user.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class NewMessageForm {
 
     private String message;
@@ -9,48 +13,4 @@ public class NewMessageForm {
     private String receivers;
     private User sender;
 
-    public NewMessageForm() {
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getReceivers() {
-        return receivers;
-    }
-
-    public void setReceivers(String receivers) {
-        this.receivers = receivers;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    @Override
-    public String toString() {
-        return "NewMessageForm{" +
-                "message='" + message + '\'' +
-                ", topic='" + topic + '\'' +
-                ", receivers='" + receivers + '\'' +
-                ", sender=" + sender.getEmail() +
-                '}';
-    }
 }

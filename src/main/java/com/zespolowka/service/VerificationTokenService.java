@@ -3,7 +3,7 @@ package com.zespolowka.service;
 import com.zespolowka.entity.VerificationToken;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.repository.VerificationTokenRepository;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +13,8 @@ import java.util.Optional;
  * Created by Pitek on 2016-02-17.
  */
 @Service
+@Slf4j
 public class VerificationTokenService {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(VerificationTokenService.class);
 
     private final VerificationTokenRepository verificationTokenRepository;
 
@@ -24,7 +24,7 @@ public class VerificationTokenService {
     }
 
     public Optional<VerificationToken> getVerificationTokenByToken(String token) {
-        logger.info("Pobieranie Tokena o tokenie = {}", token);
+        log.info("Pobieranie Tokena o tokenie = {}", token);
         return verificationTokenRepository.findVerificationTokenByToken(token);
     }
 
@@ -34,7 +34,7 @@ public class VerificationTokenService {
     }
 
     public void deleteVerificationTokenByUser(User user) {
-        logger.info("deleteVerificationTokenByUser");
+        log.info("deleteVerificationTokenByUser");
         verificationTokenRepository.deleteVerificationTokenByUser(user);
     }
 

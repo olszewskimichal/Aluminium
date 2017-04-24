@@ -13,8 +13,7 @@ import com.zespolowka.service.TestFormService;
 import com.zespolowka.service.TestService;
 import com.zespolowka.service.UserService;
 import com.zespolowka.validators.CreateTestValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,8 +41,8 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/test")
+@Slf4j
 public class TestController {
-    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
     private final TestFormService testFormService;
     private final TestService testService;
     private final CreateTestValidator createTestValidator;
@@ -64,7 +63,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "create")
     public String createTest(final Model model) {
-        logger.info("Metoda - createTest");
+        log.info("Metoda - createTest");
         createTestForm = this.testFormService.getTestFromSession();
         model.addAttribute("createTestForm", createTestForm);
         return "tmpCreateTest";
@@ -73,7 +72,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/edit/{id}")
     public String editTest(@PathVariable("id") Long id, final Model model) {
-        logger.info("Metoda - editTest");
+        log.info("Metoda - editTest");
         if (testFormService.getEditTestIdFromSession() != null) {
             createTestForm = testFormService.getEditTestFromSession();
         } else {
@@ -89,7 +88,7 @@ public class TestController {
     @RequestMapping(value = "create/add", method = RequestMethod.POST)
     public String addQuestion(@RequestParam(value = "questionId", defaultValue = "0") int questionId, final CreateTestForm createTestForm) {
         testFormService.updateTestFormInSession(createTestForm);
-        logger.info("Metoda - addQuestion");
+        log.info("Metoda - addQuestion");
         switch (questionId) {
             case 0: {
                 testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.CLOSEDTASK));
@@ -116,7 +115,7 @@ public class TestController {
     @RequestMapping(value = "edit/add", method = RequestMethod.POST)
     public String addEditQuestion(@RequestParam(value = "questionId", defaultValue = "0") int questionId, final CreateTestForm createTestForm) {
         testFormService.updateEditTestFormInSession(createTestForm);
-        logger.info("Metoda - addEditQuestion");
+        log.info("Metoda - addEditQuestion");
         switch (questionId) {
             case 0: {
                 testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.CLOSEDTASK));
@@ -142,7 +141,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "create/change", method = RequestMethod.POST)
     public String changeLanguages(@RequestParam(value = "taskId", defaultValue = "0") Integer taskId, @RequestParam(value = "selected", defaultValue = "java") String selected, final CreateTestForm createTestForm, final Model model) {
-        logger.info("Metoda - changeLanguages");
+        log.info("Metoda - changeLanguages");
         taskId -= 1;
         testFormService.updateSelectedLanguagesInSession(selected);
         String languages[] = selected.split(",");
@@ -162,7 +161,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "edit/change", method = RequestMethod.POST)
     public String changeEditLanguages(@RequestParam(value = "taskId", defaultValue = "0") Integer taskId, @RequestParam(value = "selected", defaultValue = "java") String selected, final CreateTestForm createTestForm, final Model model) {
-        logger.info("Metoda - changeEditLanguages");
+        log.info("Metoda - changeEditLanguages");
         testFormService.updateSelectedLanguagesInSession(selected);
         String languages[] = selected.split(",");
         TaskForm taskForm = createTestForm.getTasks().get(taskId);
@@ -181,7 +180,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "create/remove", method = RequestMethod.POST)
     public String removeQuestion(@RequestParam(value = "taskId") int taskId, final CreateTestForm createTestForm, final Model model) {
-        logger.info("removeQuestion");
+        log.info("removeQuestion");
         createTestForm.getTasks().remove(taskId);
         testFormService.updateTestFormInSession(createTestForm);
 
@@ -191,7 +190,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "edit/remove", method = RequestMethod.POST)
     public String removeEditQuestion(@RequestParam(value = "taskId") int taskId, final CreateTestForm createTestForm, final Model model) {
-        logger.info("removeEditQuestion");
+        log.info("removeEditQuestion");
         createTestForm.getTasks().remove(taskId);
         testFormService.updateEditTestFormInSession(createTestForm);
 
@@ -201,15 +200,15 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public String save(final @Valid CreateTestForm createTestForm, final BindingResult result, final RedirectAttributes redirectAttributes) {
-        logger.info("Metoda - save");
+        log.info("Metoda - save");
         createTestValidator.validate(createTestForm, result);
         if (result.hasErrors()) {
-            logger.info(result.getAllErrors().toString());
+            log.info(result.getAllErrors().toString());
             return "tmpCreateTest";
         }
         testFormService.updateTestFormInSession(createTestForm);
         Test test = testService.create(createTestForm);
-        logger.info(test.toString());
+        log.info(test.toString());
         testFormService.updateTestFormInSession(new CreateTestForm());
         testFormService.updateSelectedLanguagesInSession("");
         redirectAttributes.addFlashAttribute("sukces", true);
@@ -219,10 +218,10 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String saveEdit(final @Valid CreateTestForm createTestForm, final BindingResult result) {
-        logger.info("Metoda - save");
+        log.info("Metoda - save");
         createTestValidator.validate(createTestForm, result);
         if (result.hasErrors()) {
-            logger.info(result.getAllErrors().toString());
+            log.info(result.getAllErrors().toString());
             return "editTest";
         }
         testService.update(createTestForm, testFormService.getEditTestIdFromSession());
@@ -234,7 +233,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/delete/{id}")
     public String deleteTest(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        logger.info("Metoda - deleteTest");
+        log.info("Metoda - deleteTest");
         testService.delete(id);
         redirectAttributes.addFlashAttribute("deleted", true);
         return "redirect:/test/all";
@@ -244,7 +243,7 @@ public class TestController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping("/all")
     public String showAll(Model model) {
-        logger.info("metoda - showAll");
+        log.info("metoda - showAll");
         try {
             Map<Test, Integer> testMap = new HashMap<>();
             ArrayList<Test> lista = new ArrayList<>(testService.getAllTests());
@@ -257,22 +256,22 @@ public class TestController {
             testFormService.removeEditTestFormInSession();
 
         } catch (RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return "tests";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String showUserTests(@PathVariable final Long id, final Model model) {
-        logger.info("nazwa metody = showUserTests");
+        log.info("nazwa metody = showUserTests");
         try {
             User user = UserService.getUserById(id)
                     .orElseThrow(
                             () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
         } catch (final Exception e) {
-            logger.error(e.getMessage(), e);
-            logger.info("{}\n{}", id.toString(), model);
+            log.error(e.getMessage(), e);
+            log.info("{}\n{}", id.toString(), model);
         }
         return "userTests";
     }
@@ -316,7 +315,7 @@ public class TestController {
             ServletContext context = request.getServletContext();
             String appPath = context.getRealPath("");
             String fullPath = appPath + filePath.replaceAll(" ", "");
-            logger.info("PDF utworzony w: {}", fullPath);
+            log.info("PDF utworzony w: {}", fullPath);
             File file = new File(fullPath.replaceAll(" ", ""));
             testService.createPDF(file, title, header, body);
 
@@ -354,7 +353,7 @@ public class TestController {
                 inputStream.close();
                 Files.delete(file.toPath());
             } catch (Exception ex) {
-                logger.info("FILE NOT FOUND: {}", ex.getMessage());
+                log.info("FILE NOT FOUND: {}", ex.getMessage());
             }
         }
     }

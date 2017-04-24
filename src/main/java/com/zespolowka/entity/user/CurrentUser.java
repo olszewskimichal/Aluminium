@@ -1,10 +1,12 @@
 package com.zespolowka.entity.user;
 
+import lombok.Data;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 /**
  * Created by Pitek on 2015-12-11.
  */
+@Data
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 
     private User user;
@@ -25,12 +27,5 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 
     public Role getRole() {
         return user.getRole();
-    }
-
-    @Override
-    public String toString() {
-        return "CurrentUser{" +
-                "user=" + user +
-                '}';
     }
 }

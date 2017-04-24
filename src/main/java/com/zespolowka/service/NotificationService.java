@@ -6,8 +6,7 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.NewMessageForm;
 import com.zespolowka.repository.NotificationRepository;
 import com.zespolowka.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +20,8 @@ import java.util.NoSuchElementException;
 
 @Service
 @Transactional
+@Slf4j
 public class NotificationService {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
@@ -34,28 +33,28 @@ public class NotificationService {
 
 
     public Notification getNotificationById(Long id) {
-        logger.info("getNotificationById = {}", id);
+        log.info("getNotificationById = {}", id);
         return notificationRepository.findOne(id);
     }
 
 
     public Collection<Notification> findTop5ByUserIdOrUserRoleOrderByDateDesc(Long userId, Role userRole) {
-        logger.info("findTop5ByUserId={}OrUserRole={}OrderByDateDesc = ", userId, userRole);
+        log.info("findTop5ByUserId={}OrUserRole={}OrderByDateDesc = ", userId, userRole);
         return notificationRepository.findTop5ByUserIdOrUserRoleOrderByDateDesc(userId, userRole);
     }
 
     public Long countByUnreadAndUserId(boolean unread, Long userId) {
-        logger.info("countByUnread={}AndUserId={}", unread, userId);
+        log.info("countByUnread={}AndUserId={}", unread, userId);
         return notificationRepository.countByUnreadAndUserId(unread, userId);
     }
 
     public Long countByUnreadAndUserRole(boolean unread, Role userRole) {
-        logger.info("countByUnread={}AndUserId={}", unread, userRole);
+        log.info("countByUnread={}AndUserId={}", unread, userRole);
         return notificationRepository.countByUnreadAndUserRole(unread, userRole);
     }
 
     public Notification createNotification(Notification notification) {
-        logger.info("createNotif{}", notification);
+        log.info("createNotif{}", notification);
         return notificationRepository.save(notification);
     }
 
@@ -90,7 +89,7 @@ public class NotificationService {
                             .orElseThrow(() -> new NoSuchElementException(
                                     String.format("Uzytkownik o emailu =%s nie istnieje", st)));
                     notif = new Notification(form.getMessage(), form.getTopic(), usr.getId(), form.getSender());
-                    logger.info("Wiadomosc wyslana do: {}", st);
+                    log.info("Wiadomosc wyslana do: {}", st);
                     notificationRepository.save(notif);
                     wyslane.add(st);
                 } else {
@@ -100,7 +99,7 @@ public class NotificationService {
                         Collection<User> users = userRepository.findUsersByRole(Role.valueOf(st2));
                         for (User usr : users) {
                             notif = new Notification(form.getMessage(), form.getTopic(), usr.getId(), form.getSender());
-                            logger.info("Grupowa wiadomosc do: {}", usr.getEmail());
+                            log.info("Grupowa wiadomosc do: {}", usr.getEmail());
                             notificationRepository.save(notif);
                             wyslane.add(st);
                         }
@@ -109,16 +108,16 @@ public class NotificationService {
                 }
             }
         } catch (Exception e) {
-            logger.info(e.getMessage(), e);
-            logger.info(form.toString());
+            log.info(e.getMessage(), e);
+            log.info(form.toString());
         }
     }
 
     public void deleteMessagesByUserId(Long id) {
-        logger.info("deleteMessagesByUserId");
-        logger.info("Przed usunieciem:{}", notificationRepository.count());
+        log.info("deleteMessagesByUserId");
+        log.info("Przed usunieciem:{}", notificationRepository.count());
         notificationRepository.deleteByUserId(id);
-        logger.info("Po usunieciu:{}", notificationRepository.count());
+        log.info("Po usunieciu:{}", notificationRepository.count());
     }
 
     public void deleteMessagesBySender(User user) {

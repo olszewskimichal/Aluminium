@@ -1,19 +1,15 @@
 package com.zespolowka.validators;
 
 import com.zespolowka.forms.UserEditForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 
 @Component
+@Slf4j
 public class ChangePasswordValidator implements Validator {
-    private static final Logger logger = LoggerFactory.getLogger(ChangePasswordValidator.class);
-
-    public ChangePasswordValidator() {
-    }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -22,7 +18,7 @@ public class ChangePasswordValidator implements Validator {
 
     public void validate(Object target, Errors errors) {
         UserEditForm form = (UserEditForm) target;
-        logger.info("Walidacja hasla {}", target);
+        log.info("Walidacja hasla {}", target);
         if (!form.getPassword().isEmpty()) {
             if (!form.getPassword().equals(form.getConfirmPassword())) {
                 errors.rejectValue("password", "password_error");

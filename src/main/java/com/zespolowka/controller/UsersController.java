@@ -4,8 +4,7 @@ import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
 import com.zespolowka.service.UserService;
 import com.zespolowka.validators.UsersEditValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 
 @Controller
+@Slf4j
 public class UsersController {
-    private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
-
     private final UserService userService;
     private final UsersEditValidator usersEditValidator;
 
@@ -34,14 +32,14 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping("/users")
     public String getUsersPage(Model model) {
-        logger.info("nazwa metody = getUsersPage");
+        log.info("nazwa metody = getUsersPage");
         try {
             model.addAttribute("Users", userService.getAllUsers());
 
             model.addAttribute("usersEditForm", new UserEditForm(new User()));
         } catch (RuntimeException e) {
-            logger.error(e.getMessage(), e);
-            logger.info("{}\n{}", model.toString(), userService.getAllUsers().toString());
+            log.error(e.getMessage(), e);
+            log.info("{}\n{}", model.toString(), userService.getAllUsers().toString());
         }
 
         return "users";
@@ -52,7 +50,7 @@ public class UsersController {
     public String saveEditedUser(@ModelAttribute @Valid final UserEditForm usersEditForm,
                                  final Errors errors) {
 
-        logger.info("nazwa metody = saveUser");
+        log.info("nazwa metody = saveUser");
         usersEditValidator.validate(usersEditForm, errors);
         if (errors.hasErrors()) {
             return "redirect:/users";

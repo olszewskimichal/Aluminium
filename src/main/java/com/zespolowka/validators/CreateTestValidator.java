@@ -3,8 +3,7 @@ package com.zespolowka.validators;
 import com.zespolowka.forms.CreateTestForm;
 import com.zespolowka.forms.ProgrammingTaskForm;
 import com.zespolowka.forms.TaskForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -16,8 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class CreateTestValidator implements Validator {
-    private static final Logger logger = LoggerFactory.getLogger(CreateTestValidator.class);
     private Boolean questionNull = false;
     private Boolean invalidBeginDate = false;
     private Boolean invalidEndDate = false;
@@ -55,7 +54,7 @@ public class CreateTestValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         CreateTestForm createTestForm = (CreateTestForm) target;
-        logger.info("Walidacja testu {}", createTestForm);
+        log.info("Walidacja testu {}", createTestForm);
 
 
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -96,7 +95,7 @@ public class CreateTestValidator implements Validator {
         programingDetailTaskTestCodeNull = false;
         sqlTaskWithoutPreparations = false;
         if (createTestForm.getTasks().size() > 0) {
-            logger.info("{}{}", closedTaskWithoutCorrectAnswer, questionNull);
+            log.info("{}{}", closedTaskWithoutCorrectAnswer, questionNull);
             for (TaskForm taskForm : taskForms) {
                 if (!questionNull && (taskForm.getQuestion() == null || taskForm.getQuestion().length() < 5)) {
                     questionNull = true;
@@ -178,7 +177,7 @@ public class CreateTestValidator implements Validator {
         if (sqlTaskWithoutPreparations)
             errors.rejectValue("tasks[" + invalidTask + "].preparations", "Error.createTestForm.preparations");
 
-        logger.info(toString());
+        log.info(toString());
     }
 
     @Override

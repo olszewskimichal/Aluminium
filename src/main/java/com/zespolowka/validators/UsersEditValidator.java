@@ -5,8 +5,7 @@ import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserEditForm;
 import com.zespolowka.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,9 +16,8 @@ import java.util.NoSuchElementException;
 
 
 @Component
+@Slf4j
 public class UsersEditValidator implements Validator {
-    private static final Logger logger = LoggerFactory.getLogger(UserCreateValidator.class);
-
     private final UserService userService;
 
     @Autowired
@@ -37,7 +35,7 @@ public class UsersEditValidator implements Validator {
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = currentUser.getUser();
         UserEditForm form = (UserEditForm) target;
-        logger.info("Walidacja edycji{}", target);
+        log.info("Walidacja edycji{}", target);
 
         User usr1 = userService.getUserByEmail(form.getEmail()).orElse(new User());
         User usr2 = userService.getUserById(form.getId()).orElse(new User());

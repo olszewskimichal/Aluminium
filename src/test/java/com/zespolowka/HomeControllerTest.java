@@ -22,7 +22,7 @@ public class HomeControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        mvc = MockMvcBuilders.standaloneSetup(new HomeController(testService, solutionTestService)).build();
+        mvc = MockMvcBuilders.standaloneSetup(new HomeController(testService)).build();
     }
 
     @Test

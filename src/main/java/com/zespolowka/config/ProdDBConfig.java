@@ -13,8 +13,6 @@ import java.net.URISyntaxException;
 @Configuration
 @Profile("prod")
 public class ProdDBConfig {
-    public ProdDBConfig() {
-    }
 
     @Bean
     public BasicDataSource dataSource() throws URISyntaxException {

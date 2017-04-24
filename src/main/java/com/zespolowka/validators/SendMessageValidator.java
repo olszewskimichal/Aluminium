@@ -4,8 +4,7 @@ import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.NewMessageForm;
 import com.zespolowka.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,10 +14,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class SendMessageValidator implements Validator {
-
-    private static final Logger logger = LoggerFactory.getLogger(SendMessageValidator.class);
-
     private final UserService UserService;
 
     @Autowired
@@ -33,7 +30,7 @@ public class SendMessageValidator implements Validator {
 
     public void validate(Object target, Errors errors) {
         NewMessageForm form = (NewMessageForm) target;
-        logger.info("Walidacja adresatow {}", ((NewMessageForm) target).getReceivers());
+        log.info("Walidacja adresatow {}", ((NewMessageForm) target).getReceivers());
         if (form.getReceivers().isEmpty()) {
             errors.rejectValue("receivers", "notification.receivers_empty");
         } else {

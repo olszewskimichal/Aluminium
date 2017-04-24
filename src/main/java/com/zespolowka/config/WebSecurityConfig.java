@@ -1,6 +1,5 @@
 package com.zespolowka.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,15 +18,15 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Profile("!test")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
-
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-
+    public WebSecurityConfig(UserDetailsService userDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.userDetailsService = userDetailsService;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

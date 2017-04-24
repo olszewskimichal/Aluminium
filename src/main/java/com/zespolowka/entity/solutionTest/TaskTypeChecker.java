@@ -2,8 +2,6 @@ package com.zespolowka.entity.solutionTest;
 
 
 public class TaskTypeChecker {
-    public TaskTypeChecker() {
-    }
 
     public static boolean isTaskClosedSolution(Object object) {
         return object instanceof TaskClosedSolution;
