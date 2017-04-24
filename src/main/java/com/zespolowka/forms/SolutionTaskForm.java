@@ -47,7 +47,9 @@ public class SolutionTaskForm {
             this.answerCode = ((TaskProgrammingSolution) taskSolution).getAnswerCode();
             TaskProgramming taskProgramming = (TaskProgramming) task;
             Set<TaskProgrammingDetail> taskProgrammingDetails = taskProgramming.getProgrammingDetailSet();
-            this.languages.addAll(taskProgrammingDetails.stream().map(taskProgrammingDetail -> taskProgrammingDetail.getLanguage().toString()).collect(Collectors.toList()));
+            this.languages.addAll(taskProgrammingDetails.stream()
+                    .map(taskProgrammingDetail -> taskProgrammingDetail.getLanguage().toString())
+                    .collect(Collectors.toList()));
 
         } else if (taskSolution instanceof TaskSqlSolution) {
             this.taskType = SQLTASK;
@@ -69,7 +71,9 @@ public class SolutionTaskForm {
         if (taskType == PROGRAMMINGTASK) {
             TaskProgramming taskProgramming = (TaskProgramming) task;
             Set<TaskProgrammingDetail> taskProgrammingDetails = taskProgramming.getProgrammingDetailSet();
-            languages.addAll(taskProgrammingDetails.stream().map(taskProgrammingDetail -> taskProgrammingDetail.getLanguage().toString()).collect(Collectors.toList()));
+            languages.addAll(taskProgrammingDetails.stream()
+                    .map(taskProgrammingDetail -> taskProgrammingDetail.getLanguage().toString())
+                    .collect(Collectors.toList()));
         }
 
     }

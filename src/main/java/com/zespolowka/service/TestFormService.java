@@ -110,10 +110,12 @@ public class TestFormService {
                 String language = prLanguage.toString();
                 if (Arrays.asList(languages).indexOf(language) > -1) {
                     if (taskForm.getLanguages().contains(language)) {
-                        programmingTaskFormSet.stream().filter(programmingTaskForm -> programmingTaskForm.getLanguage().equals(language)).forEach(programmingTaskForm -> {
-                            programmingTaskForm.setHidden(true);
-                            newProgrammingTaskFormSet.add(programmingTaskForm);
-                        });
+                        programmingTaskFormSet.stream()
+                                .filter(programmingTaskForm -> programmingTaskForm.getLanguage().equals(language))
+                                .forEach(programmingTaskForm -> {
+                                    programmingTaskForm.setHidden(true);
+                                    newProgrammingTaskFormSet.add(programmingTaskForm);
+                                });
                     } else {
                         newProgrammingTaskFormSet.add(new ProgrammingTaskForm(language, true));
                     }

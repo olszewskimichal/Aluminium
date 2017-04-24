@@ -27,7 +27,8 @@ public class ChangePasswordValidator implements Validator {
             if (!form.getPassword().equals(form.getConfirmPassword())) {
                 errors.rejectValue("password", "password_error");
             }
-            if (!form.getPassword().matches("^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$")) {
+            if (!form.getPassword()
+                    .matches("^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$")) {
                 errors.rejectValue("password", "passwordlength_error");
             }
         }

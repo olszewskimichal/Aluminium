@@ -66,7 +66,9 @@ public class SendMailService {
             String newPassword = sb.toString();
             user.setPasswordHash(new BCryptPasswordEncoder().encode(newPassword));
             UserService.update(user);
-            message.setText("<html><body><h4>Witaj " + user.getName() + "!</h4><p>Twoje nowe hasło to: " + newPassword + "</p></body></html>", true);
+            message.setText(
+                    "<html><body><h4>Witaj " + user.getName() + "!</h4><p>Twoje nowe hasło to: " + newPassword + "</p></body></html>",
+                    true);
             mailSender.send(mimeMessage);
             logger.info("Reminder sent", newPassword);
         } catch (MessagingException e) {

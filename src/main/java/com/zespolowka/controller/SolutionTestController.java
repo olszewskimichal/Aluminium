@@ -66,14 +66,17 @@ public class SolutionTestController {
         User user = currentUser.getUser();
         Long id = (Long) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
         Test test = testService.getTestById(id);
-        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.OPEN);
+        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test,
+                user, SolutionStatus.OPEN);
         if (solutionTest2.isPresent()) {
             SolutionTest solutionTest = solutionTest2.get();
-            SolutionTestForm solutionTestForm = solutionTestService.createForm(solutionTest.getTest(), solutionTest.getUser());
+            SolutionTestForm solutionTestForm = solutionTestService.createForm(solutionTest.getTest(),
+                    solutionTest.getUser());
             model.addAttribute("solutionTest", solutionTestForm);
             return "testSolution";
         } else {
-            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.DURING);
+            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user,
+                    SolutionStatus.DURING);
             if (solutionTest2.isPresent()) {
                 SolutionTest solutionTest = solutionTest2.get();
                 SolutionTestForm solutionTestForm = solutionTestService.createFormWithExistingSolution(solutionTest);
@@ -102,11 +105,13 @@ public class SolutionTestController {
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = currentUser.getUser();
         SolutionTest solutionTest;
-        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.OPEN);
+        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test,
+                user, SolutionStatus.OPEN);
         if (solutionTest2.isPresent()) {
             solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
         } else {
-            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.DURING);
+            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user,
+                    SolutionStatus.DURING);
             solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
         }
         solutionTestService.create(solutionTest, SolutionStatus.FINISHED);
@@ -123,11 +128,13 @@ public class SolutionTestController {
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = currentUser.getUser();
         SolutionTest solutionTest;
-        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.OPEN);
+        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test,
+                user, SolutionStatus.OPEN);
         if (solutionTest2.isPresent()) {
             solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
         } else {
-            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.DURING);
+            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user,
+                    SolutionStatus.DURING);
             solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
         }
         solutionTest = solutionTestService.create(solutionTest, SolutionStatus.DURING);
@@ -146,15 +153,18 @@ public class SolutionTestController {
         CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = currentUser.getUser();
         SolutionTest solutionTest;
-        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.OPEN);
+        Optional<SolutionTest> solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test,
+                user, SolutionStatus.OPEN);
         if (solutionTest2.isPresent()) {
             solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
         } else {
-            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.DURING);
+            solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user,
+                    SolutionStatus.DURING);
             if (solutionTest2.isPresent()) {
                 solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
             } else {
-                solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user, SolutionStatus.FINISHED);
+                solutionTest2 = solutionTestService.findSolutionTestByTestAndUserAndSolutionStatus(test, user,
+                        SolutionStatus.FINISHED);
                 solutionTest = solutionTestService.create(solutionTest2.get(), solutionTestForm);
             }
 
@@ -222,7 +232,9 @@ public class SolutionTestController {
     public String showCurrentUserTests(final Model model) {
         logger.info("nazwa metody = showCurrentUserTests");
         try {
-            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
             final User user = currentUser.getUser();
             model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
             model.addAttribute("BestTest", solutionTestService.getSolutionsWithTheBestResult(user));

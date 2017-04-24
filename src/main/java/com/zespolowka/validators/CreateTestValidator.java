@@ -78,7 +78,10 @@ public class CreateTestValidator implements Validator {
         }
 
         if (!invalidBeginDate && !invalidEndDate) {
-            if ((LocalDate.parse(createTestForm.getEndDate(), dateTimeFormatter).isBefore(LocalDate.parse(createTestForm.getBeginDate(), dateTimeFormatter))) || (LocalDate.parse(createTestForm.getEndDate(), dateTimeFormatter).isEqual(LocalDate.parse(createTestForm.getBeginDate(), dateTimeFormatter)))) {
+            if ((LocalDate.parse(createTestForm.getEndDate(), dateTimeFormatter)
+                    .isBefore(LocalDate.parse(createTestForm.getBeginDate(), dateTimeFormatter))) || (LocalDate.parse(
+                    createTestForm.getEndDate(), dateTimeFormatter)
+                    .isEqual(LocalDate.parse(createTestForm.getBeginDate(), dateTimeFormatter)))) {
                 beginDateAfterEndDate = true;
             }
         }
@@ -108,7 +111,8 @@ public class CreateTestValidator implements Validator {
                         questionWithoutAnswer = true;
                         invalidTask = taskForms.indexOf(taskForm);
                     }
-                    if (!closedTaskWithoutCountingPointOption && ((!taskForm.getCountNotFull() || taskForm.getCountNotFull() == null) && (!taskForm.getWrongReset() || taskForm.getWrongReset() == null))) {
+                    if (!closedTaskWithoutCountingPointOption && ((!taskForm.getCountNotFull() || taskForm.getCountNotFull() == null) && (!taskForm
+                            .getWrongReset() || taskForm.getWrongReset() == null))) {
                         closedTaskWithoutCountingPointOption = true;
                         invalidTask = taskForms.indexOf(taskForm);
                     }
@@ -129,20 +133,25 @@ public class CreateTestValidator implements Validator {
                     }
                 }
                 if (taskForm.getTaskType() == TaskForm.PROGRAMMINGTASK) {
-                    if (!programmingTaskWithoutChoosenLanguage && (taskForm.getLanguages().size() < 1 || taskForm.getLanguages() == null)) {
+                    if (!programmingTaskWithoutChoosenLanguage && (taskForm.getLanguages()
+                            .size() < 1 || taskForm.getLanguages() == null)) {
                         programmingTaskWithoutChoosenLanguage = true;
                         invalidTask = taskForms.indexOf(taskForm);
                     }
                     if (!programmingTaskWithoutChoosenLanguage) {
                         Set<ProgrammingTaskForm> programmingTaskFormSet = taskForm.getProgrammingTaskForms();
-                        programmingTaskFormSet.stream().filter(programmingTaskForm -> programmingTaskForm.getHidden() && !programingDetailTaskTestCodeNull && (programmingTaskForm.getTestCode() == null || programmingTaskForm.getTestCode().length() < 10)).forEach(programmingTaskForm -> {
-                            programingDetailTaskTestCodeNull = true;
-                            invalidTask = taskForms.indexOf(taskForm);
-                        });
+                        programmingTaskFormSet.stream()
+                                .filter(programmingTaskForm -> programmingTaskForm.getHidden() && !programingDetailTaskTestCodeNull && (programmingTaskForm
+                                        .getTestCode() == null || programmingTaskForm.getTestCode().length() < 10))
+                                .forEach(programmingTaskForm -> {
+                                    programingDetailTaskTestCodeNull = true;
+                                    invalidTask = taskForms.indexOf(taskForm);
+                                });
                     }
                 }
                 if (taskForm.getTaskType() == TaskForm.SQLTASK) {
-                    if (!sqlTaskWithoutPreparations && (taskForm.getPreparations().length() < 6 || taskForm.getPreparations() == null)) {
+                    if (!sqlTaskWithoutPreparations && (taskForm.getPreparations()
+                            .length() < 6 || taskForm.getPreparations() == null)) {
                         sqlTaskWithoutPreparations = true;
                         invalidTask = taskForms.indexOf(taskForm);
                     }

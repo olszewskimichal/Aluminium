@@ -150,7 +150,8 @@ public class TestController {
         Set<ProgrammingTaskForm> programmingTaskFormSet = taskForm.getProgrammingTaskForms();
         Set<String> lang = new HashSet<>(Arrays.asList(languages));
         taskForm.setLanguages(lang);
-        taskForm.setProgrammingTaskForms(testFormService.createProgrammingTaskSet(programmingTaskFormSet, languages, taskForm));
+        taskForm.setProgrammingTaskForms(
+                testFormService.createProgrammingTaskSet(programmingTaskFormSet, languages, taskForm));
 
         createTestForm.getTasks().set(taskId, taskForm);
         testFormService.updateTestFormInSession(createTestForm);
@@ -168,7 +169,8 @@ public class TestController {
         Set<ProgrammingTaskForm> programmingTaskFormSet = taskForm.getProgrammingTaskForms();
         Set<String> lang = new HashSet<>(Arrays.asList(languages));
         taskForm.setLanguages(lang);
-        taskForm.setProgrammingTaskForms(testFormService.createProgrammingTaskSet(programmingTaskFormSet, languages, taskForm));
+        taskForm.setProgrammingTaskForms(
+                testFormService.createProgrammingTaskSet(programmingTaskFormSet, languages, taskForm));
 
         createTestForm.getTasks().set(taskId, taskForm);
         testFormService.updateEditTestFormInSession(createTestForm);
@@ -247,7 +249,8 @@ public class TestController {
             Map<Test, Integer> testMap = new HashMap<>();
             ArrayList<Test> lista = new ArrayList<>(testService.getAllTests());
             for (Test aLista : lista)
-                testMap.put(aLista, solutionTestService.countSolutionTestsByTestAndSolutionStatus(aLista, SolutionStatus.FINISHED));
+                testMap.put(aLista,
+                        solutionTestService.countSolutionTestsByTestAndSolutionStatus(aLista, SolutionStatus.FINISHED));
 
             model.addAttribute("Tests", testMap);
             testFormService.removeEditTestIdInSession();
@@ -264,7 +267,8 @@ public class TestController {
         logger.info("nazwa metody = showUserTests");
         try {
             User user = UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
@@ -278,7 +282,9 @@ public class TestController {
                        HttpServletResponse response) {
 
         Collection<SolutionTest> tests = solutionTestService.getSolutionTestsByTest(testService.getTestById(id));
-        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         String[] header = new String[5];
         header[0] = "Lp";
@@ -291,10 +297,14 @@ public class TestController {
         int i = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         if (tests.size() > 0) {
-            String title = "Raport z dnia: " + LocalDate.now() + "\nDla: " + tests.iterator().next().getTest().getName() + "\n\n";
+            String title = "Raport z dnia: " + LocalDate.now() + "\nDla: " + tests.iterator()
+                    .next()
+                    .getTest()
+                    .getName() + "\n\n";
             for (SolutionTest test : tests) {
                 body[i][0] = "" + (i + 1);
-                body[i][1] = "" + test.getUser().getName() + " " + test.getUser().getLastName() + ", " + test.getUser().getEmail();
+                body[i][1] = "" + test.getUser().getName() + " " + test.getUser().getLastName() + ", " + test.getUser()
+                        .getEmail();
                 body[i][2] = "" + test.getPoints() + " / " + test.getTest().getMaxPoints();
                 BigDecimal procent = BigDecimal.valueOf(test.getPoints() / test.getTest().getMaxPoints() * 100);
                 body[i][3] = "" + procent.setScale(2, RoundingMode.HALF_UP).floatValue() + " %";

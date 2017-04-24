@@ -27,7 +27,8 @@ public class CurrentUserDetailsService implements UserDetailsService {
         logger.info("Autentykacja uzytkownika o mailu = {}", email);
         try {
             User user = UserService.getUserByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            String.format("Uzytkownik z mailem=%s nie istnieje", email)));
             return new CurrentUser(user);
         } catch (Exception e) {
             logger.info(e.getMessage());

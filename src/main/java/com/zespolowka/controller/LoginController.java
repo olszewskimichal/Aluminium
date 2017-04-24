@@ -65,7 +65,8 @@ public class LoginController {
         String email = request.getParameter("username");
         try {
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            String.format("Uzytkownik z mailem=%s nie istnieje", email)));
             sendMailService.sendReminderMail(user);
             logger.info("Email:", email);
             model.addAttribute("sukces", true);

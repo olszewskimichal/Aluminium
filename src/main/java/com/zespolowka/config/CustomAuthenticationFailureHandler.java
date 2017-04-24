@@ -47,7 +47,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             String email = request.getParameter("username");
             try {
                 User user = UserService.getUserByEmail(email)
-                        .orElseThrow(() -> new UsernameNotFoundException(String.format("Uzytkownik z mailem=%s nie istnieje", email)));
+                        .orElseThrow(() -> new UsernameNotFoundException(
+                                String.format("Uzytkownik z mailem=%s nie istnieje", email)));
                 int tries = user.getLogin_tries();
                 tries--;
                 if (tries > 0) {

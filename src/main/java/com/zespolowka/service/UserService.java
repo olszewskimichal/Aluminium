@@ -47,7 +47,8 @@ public class UserService {
     }
 
     public Collection<User> findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String like) {
-        return userRepository.findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(like, like, like);
+        return userRepository.findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(
+                like, like, like);
     }
 
     public User create(UserCreateForm form) {
@@ -64,7 +65,8 @@ public class UserService {
 
     public User editUser(UserEditForm userEditForm) {
         User user = getUserById(userEditForm.getId())
-                .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", userEditForm.getId())));
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("Uzytkownik o id =%s nie istnieje", userEditForm.getId())));
         user.setName(userEditForm.getName());
         user.setLastName(userEditForm.getLastName());
         user.setEmail(userEditForm.getEmail());

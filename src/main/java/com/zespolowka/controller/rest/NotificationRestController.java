@@ -36,7 +36,8 @@ public class NotificationRestController {
         int evalPage = (page == null || page < 1) ? INITIAL_PAGE : page - 1;
         currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = currentUser.getUser();
-        return notificationService.findAllPageable(new PageRequest(evalPage, MESSAGES_ON_PAGE), user.getId(), user.getRole()).getContent();
+        return notificationService.findAllPageable(new PageRequest(evalPage, MESSAGES_ON_PAGE), user.getId(),
+                user.getRole()).getContent();
     }
 
     @CrossOrigin
@@ -45,7 +46,8 @@ public class NotificationRestController {
         int evalPage = (page == null || page < 1) ? INITIAL_PAGE : page - 1;
         currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = currentUser.getUser();
-        return notificationService.findAllPageable(new PageRequest(evalPage, 5), user.getId(), user.getRole()).getContent();
+        return notificationService.findAllPageable(new PageRequest(evalPage, 5), user.getId(), user.getRole())
+                .getContent();
     }
 
     @CrossOrigin
@@ -54,7 +56,8 @@ public class NotificationRestController {
         int evalPage = (page == null || page < 1) ? INITIAL_PAGE : page - 1;
         currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = currentUser.getUser();
-        return notificationService.findAllPageable(new PageRequest(evalPage, MESSAGES_ON_PAGE), user.getId(), user.getRole()).getTotalPages();
+        return notificationService.findAllPageable(new PageRequest(evalPage, MESSAGES_ON_PAGE), user.getId(),
+                user.getRole()).getTotalPages();
     }
 
     @CrossOrigin

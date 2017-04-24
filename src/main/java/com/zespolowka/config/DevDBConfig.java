@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import static com.zespolowka.entity.createTest.TaskClosed.*;
+import static com.zespolowka.entity.createTest.TaskClosed.COUNT_NOT_FULL;
 
 @Configuration
 @Profile("!prod")
@@ -77,7 +77,9 @@ public class DevDBConfig {
     }
 
     public void createTests() {
-        Test test = new Test("Przykładowy test bez hasła", 3L, LocalDate.now().minusWeeks(1L), LocalDate.now().plusWeeks(1L), new ArrayList<>(), "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
+        Test test = new Test("Przykładowy test bez hasła", 3L, LocalDate.now().minusWeeks(1L),
+                LocalDate.now().plusWeeks(1L), new ArrayList<>(),
+                "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
         test.setTimePerAttempt(90);
         test.setPassword("");
         TaskClosed taskClosed = new TaskClosed("Ile to jest 2+2*2", 6.0f);
@@ -128,7 +130,8 @@ public class DevDBConfig {
         test.addTaskToTest(taskOpen);
         testRepository.save(test);
 
-        test = new Test("Przykładowy test z hasłem", 3L, LocalDate.now().minusWeeks(1L), LocalDate.now().plusWeeks(1L), new ArrayList<>(), "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
+        test = new Test("Przykładowy test z hasłem", 3L, LocalDate.now().minusWeeks(1L), LocalDate.now().plusWeeks(1L),
+                new ArrayList<>(), "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
         test.setTimePerAttempt(90);
         test.setPassword("haslo");
         taskClosed = new TaskClosed("Ile to jest 2+2*2", 6.0f);
@@ -179,7 +182,8 @@ public class DevDBConfig {
         test.addTaskToTest(taskOpen);
         test = testRepository.save(test);
 
-        Test test2 = new Test("KurzeTesty", 10L, LocalDate.now().minusWeeks(2L), LocalDate.now().minusWeeks(1L), new ArrayList<>(), "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
+        Test test2 = new Test("KurzeTesty", 10L, LocalDate.now().minusWeeks(2L), LocalDate.now().minusWeeks(1L),
+                new ArrayList<>(), "TO JEST PRZYKLADOWY FAQ TESTU TRALALALALALALLALALALA");
         TaskProgramming taskProgramming = new TaskProgramming("Zadanie z Javy", 100.0f);
         TaskProgrammingDetail taskProgrammingDetail = new TaskProgrammingDetail();
         taskProgrammingDetail.setLanguage(ProgrammingLanguages.JAVA);
@@ -571,14 +575,16 @@ public class DevDBConfig {
 
     public void createFakeUsers() {
         for (int i = 0; i < 10; i++) {
-            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl", new BCryptPasswordEncoder().encode("password"));
+            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl",
+                    new BCryptPasswordEncoder().encode("password"));
             repository.save(user);
         }
     }
 
     public void createFakeNotEnabledUsers() {
         for (int i = 10; i < 20; i++) {
-            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl", new BCryptPasswordEncoder().encode("password"));
+            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl",
+                    new BCryptPasswordEncoder().encode("password"));
             user.setEnabled(false);
             user = repository.save(user);
             verificationTokenService.create(user, UUID.randomUUID().toString());
@@ -589,7 +595,8 @@ public class DevDBConfig {
 
     public void createFakeLockedUsers() {
         for (int i = 20; i < 30; i++) {
-            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl", new BCryptPasswordEncoder().encode("password"));
+            user = new User("Imie" + i, "Nazwisko" + i, "przykladowyEmail" + i + "@o2.pl",
+                    new BCryptPasswordEncoder().encode("password"));
             user.setAccountNonLocked(false);
             repository.save(user);
         }
@@ -598,7 +605,9 @@ public class DevDBConfig {
     public void createFakeNotifications() {
         for (int i = 0; i < 20; i++) {
             try {
-                notificationRepository.save(new Notification("WiadomoscPrzykladowaTresc" + i, "PrzykladowyTematWiadomosci" + i, this.sdf.parse("31-08-2005 10:20:56"), i, repository.findOne(1L)));
+                notificationRepository.save(
+                        new Notification("WiadomoscPrzykladowaTresc" + i, "PrzykladowyTematWiadomosci" + i,
+                                this.sdf.parse("31-08-2005 10:20:56"), i, repository.findOne(1L)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

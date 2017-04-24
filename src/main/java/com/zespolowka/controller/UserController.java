@@ -65,7 +65,8 @@ public class UserController {
         logger.info("nazwa metody = showUserDetail");
         try {
             final User user = UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             model.addAttribute(user);
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
@@ -78,10 +79,13 @@ public class UserController {
     public String showCurrentUserDetail(final Model model) {
         logger.info("nazwa metody = showCurrentUserDetail");
         try {
-            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
             final User user = currentUser.getUser();
             model.addAttribute(user);
-            model.addAttribute("Notifications", notificationService.findTop5ByUserIdOrUserRoleOrderByDateDesc(user.getId(), user.getRole()));
+            model.addAttribute("Notifications",
+                    notificationService.findTop5ByUserIdOrUserRoleOrderByDateDesc(user.getId(), user.getRole()));
         } catch (final RuntimeException e) {
             logger.error(e.getMessage(), e);
         }
@@ -93,7 +97,9 @@ public class UserController {
     public String editCurrentUserDetail(final Model model) {
         logger.info("nazwa metody = showCurrentUserDetail");
         try {
-            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
             final User user = currentUser.getUser();
             model.addAttribute("userEditForm", new UserEditForm(user));
         } catch (final RuntimeException e) {
@@ -114,7 +120,8 @@ public class UserController {
         } else {
             final User user = UserService.editUser(userEditForm);
             CurrentUser currentUser = new CurrentUser(user);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), currentUser.getAuthorities());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser,
+                    currentUser.getPassword(), currentUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             model.addAttribute("sukces", true);
             return "userEdit";
@@ -127,7 +134,8 @@ public class UserController {
         logger.debug("nazwa metody = editUser");
         try {
             model.addAttribute("userEditForm", new UserEditForm(UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)))));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)))));
         } catch (final Exception e) {
             logger.error(e.getMessage(), e);
             logger.info("{}" + '\n' + "{}" + '\n' + "{}", id.toString(), model, UserService.getUserById(id));
@@ -152,7 +160,9 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deleteUser(@PathVariable final Long id, RedirectAttributes redirectAttributes) {
-        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
         logger.info("nazwa metody = deleteUser");
         logger.info("userDelete{}", id);
         if (Objects.equals(currentUser.getId(), id)) {
@@ -161,7 +171,8 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message", "Nie mozesz usunac siebie");
         } else {
             User user = UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
             if (currentUser.getRole().name().equals("ADMIN") && user.getRole().name().equals("SUPERADMIN")) {
                 logger.info("Nie mozesz usunac SA");
                 redirectAttributes.addFlashAttribute("blad", true);
@@ -183,11 +194,14 @@ public class UserController {
     @RequestMapping(value = "/changeBlock/{id}", method = RequestMethod.GET)
     public String unblockUser(@PathVariable final Integer id, RedirectAttributes redirectAttributes) {
         logger.debug("nazwa metody = unblockUser");
-        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
         final User doer = currentUser.getUser();
         try {
             User user = UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
 
             if (doer.getRole().equals(Role.SUPERADMIN)) {
                 if (user.isAccountNonLocked()) {
@@ -234,10 +248,13 @@ public class UserController {
     public String activateUser(@PathVariable final Integer id, RedirectAttributes redirectAttributes) {
         logger.debug("nazwa metody = activateUser");
         try {
-            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
             final User doer = currentUser.getUser();
             User user = UserService.getUserById(id)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
 
             if (doer.getRole().equals(Role.SUPERADMIN)) {
                 if (user.isEnabled()) {

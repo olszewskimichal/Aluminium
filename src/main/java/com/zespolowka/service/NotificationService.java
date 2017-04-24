@@ -87,14 +87,16 @@ public class NotificationService {
                 }
                 if (st.contains("@")) {
                     User usr = userRepository.findUserByEmail(st)
-                            .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o emailu =%s nie istnieje", st)));
+                            .orElseThrow(() -> new NoSuchElementException(
+                                    String.format("Uzytkownik o emailu =%s nie istnieje", st)));
                     notif = new Notification(form.getMessage(), form.getTopic(), usr.getId(), form.getSender());
                     logger.info("Wiadomosc wyslana do: {}", st);
                     notificationRepository.save(notif);
                     wyslane.add(st);
                 } else {
                     String st2 = st.toUpperCase();
-                    if (st2.equals(Role.ADMIN.name()) || st2.equals(Role.SUPERADMIN.name()) || st2.equals(Role.USER.name())) {
+                    if (st2.equals(Role.ADMIN.name()) || st2.equals(Role.SUPERADMIN.name()) || st2.equals(
+                            Role.USER.name())) {
                         Collection<User> users = userRepository.findUsersByRole(Role.valueOf(st2));
                         for (User usr : users) {
                             notif = new Notification(form.getMessage(), form.getTopic(), usr.getId(), form.getSender());

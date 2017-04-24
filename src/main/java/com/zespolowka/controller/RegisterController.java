@@ -72,7 +72,8 @@ public class RegisterController {
             User user = UserService.create(userCreateForm);
             String token = UUID.randomUUID().toString();
             VerificationToken verificationToken = verificationTokenService.create(user, token);
-            String url = servletRequest.getRequestURL().toString() + "/registrationConfirm?token=" + verificationToken.getToken();
+            String url = servletRequest.getRequestURL()
+                    .toString() + "/registrationConfirm?token=" + verificationToken.getToken();
             sendMailService.sendVerificationMail(url, user);
             logger.info(user.toString());
             model.addAttribute("userCreateForm", new UserCreateForm());
@@ -96,7 +97,8 @@ public class RegisterController {
             long diff = Duration.between(localDateTime, verificationToken.get().getExpiryDate()).toMinutes();
 
             if (diff < 0L) {
-                logger.info(String.format("Token juz jest nieaktulany \n dataDO= %s \n", verificationToken.get().getExpiryDate()));
+                logger.info(String.format("Token juz jest nieaktulany \n dataDO= %s \n",
+                        verificationToken.get().getExpiryDate()));
                 model.addAttribute("nieaktualny", true);
                 return "login";
             } else {

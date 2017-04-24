@@ -69,7 +69,8 @@ public class TestService {
             newMessageForm.setTopic(messages.getString("test_created.topic") + " " + test.getName());
             newMessageForm.setMessage(messages.getString("test_created.message"));
             User system = UserService.getUserById(1L)
-                    .orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", 1)));
+                    .orElseThrow(
+                            () -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", 1)));
             logger.info("SYS:{}", system);
             newMessageForm.setSender(system);
             notificationService.sendMessage(newMessageForm);
@@ -163,7 +164,8 @@ public class TestService {
                     Set<ProgrammingTaskForm> programmingTaskFormSet = new TreeSet<>();
                     Set<String> languages = new TreeSet<>();
                     for (TaskProgrammingDetail taskProgrammingDetail : taskProgrammingDetailSet) {
-                        ProgrammingTaskForm programmingTaskForm = new ProgrammingTaskForm(taskProgrammingDetail.getLanguage().toString(), true);
+                        ProgrammingTaskForm programmingTaskForm = new ProgrammingTaskForm(
+                                taskProgrammingDetail.getLanguage().toString(), true);
                         programmingTaskForm.setTestCode(taskProgrammingDetail.getTestCode());
                         programmingTaskForm.setTestClassName(taskProgrammingDetail.getTestClassName());
                         programmingTaskForm.setSolutionClassName(taskProgrammingDetail.getSolutionClassName());
@@ -237,17 +239,22 @@ public class TestService {
                         break;
                     }
                     case 2: {
-                        TaskProgramming taskProgramming = new TaskProgramming(taskForm.getQuestion(), (float) taskForm.getPoints());
+                        TaskProgramming taskProgramming = new TaskProgramming(taskForm.getQuestion(),
+                                (float) taskForm.getPoints());
                         Set<ProgrammingTaskForm> programmingTaskForms = taskForm.getProgrammingTaskForms();
-                        programmingTaskForms.stream().filter(ProgrammingTaskForm::getHidden).forEach(programmingTaskForm -> {
-                            TaskProgrammingDetail taskProgrammingDetail = new TaskProgrammingDetail();
-                            taskProgrammingDetail.setTestCode(programmingTaskForm.getTestCode());
-                            taskProgrammingDetail.setRestrictedList(programmingTaskForm.getRestrictedList());
-                            taskProgrammingDetail.setLanguage(ProgrammingLanguages.valueOf(programmingTaskForm.getLanguage()));
-                            taskProgrammingDetail.setSolutionClassName(programmingTaskForm.getSolutionClassName());
-                            taskProgrammingDetail.setTestClassName(programmingTaskForm.getTestClassName());
-                            taskProgramming.addTaskkProgrammingDetail(taskProgrammingDetail);
-                        });
+                        programmingTaskForms.stream()
+                                .filter(ProgrammingTaskForm::getHidden)
+                                .forEach(programmingTaskForm -> {
+                                    TaskProgrammingDetail taskProgrammingDetail = new TaskProgrammingDetail();
+                                    taskProgrammingDetail.setTestCode(programmingTaskForm.getTestCode());
+                                    taskProgrammingDetail.setRestrictedList(programmingTaskForm.getRestrictedList());
+                                    taskProgrammingDetail.setLanguage(
+                                            ProgrammingLanguages.valueOf(programmingTaskForm.getLanguage()));
+                                    taskProgrammingDetail.setSolutionClassName(
+                                            programmingTaskForm.getSolutionClassName());
+                                    taskProgrammingDetail.setTestClassName(programmingTaskForm.getTestClassName());
+                                    taskProgramming.addTaskkProgrammingDetail(taskProgrammingDetail);
+                                });
                         test.addTaskToTest(taskProgramming);
                         break;
                     }
