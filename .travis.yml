@@ -3,7 +3,7 @@ sudo: false # faster builds
 jdk:
   - oraclejdk8
 before_install:
-  - chmod ugo+x mvn
+  - chmod ugo+x mvnw
 install:
   - mvn clean install
 script:
