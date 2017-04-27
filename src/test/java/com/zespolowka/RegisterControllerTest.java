@@ -1,6 +1,5 @@
 package com.zespolowka;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -47,7 +46,7 @@ public class RegisterControllerTest {
 
 	@Test
 	public void should_process_registration() throws Exception {
-		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a1@o2.pl").param("passHash", "zaq1@WSX").param("confirmPassword", "zaq1@WSX").with(csrf())).andExpect(model().errorCount(0));
+		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a1@o2.pl").param("passHash", "zaq1@WSX").param("confirmPassword", "zaq1@WSX")).andExpect(model().errorCount(0));
 	}
 
 	@Test
