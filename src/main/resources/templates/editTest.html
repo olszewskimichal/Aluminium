@@ -40,7 +40,7 @@
                         <div class="input-group">
                                     <textarea rows="5" class="form-control"
                                               id="messageFAQ" name="messageFAQ" th:field="*{messageFAQ}"/>
-                                    <span class="input-group-addon">
+                            <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-asterisk"/>
                                     </span>
                         </div>
@@ -123,7 +123,7 @@
                                 <input type="text" class="form-control" id="question" name="question"
                                        th:field="*{tasks[__${rowStat.index}__].question}"
                                        placeholder="" required="required"/>
-                                            <span class="input-group-addon">
+                                <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-asterisk">
                                                 </span>
                                             </span>
@@ -137,7 +137,7 @@
                             <div class="input-group">
                                 <textarea id="answer" rows="10" class="form-control"
                                           th:field="*{tasks[__${rowStat.index}__].answer}"/>
-                                                <span class="input-group-addon">
+                                <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-asterisk"/>
                                                 </span>
                             </div>
@@ -267,7 +267,7 @@
                                     <input type="number" class="form-control"
                                            th:field="*{tasks[__${rowStat.index}__].points}" th:min="1" id="nazwaTest"
                                            required="required"/>
-                                <span class="input-group-addon">
+                                    <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                 </span>
                                 </div>
@@ -286,7 +286,7 @@
                                     <div class="input-group">
                                         <textarea id="restrictedList" rows="5" class="form-control"
                                                   th:field="*{tasks[__${rowStat.index}__].programmingTaskForms[__${row.index}__].restrictedList}"/>
-                                <span class="input-group-addon">
+                                        <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                  </span>
                                     </div>
@@ -300,7 +300,7 @@
                                     <div class="input-group">
                                 <textarea id="testCode" rows="30" class="form-control"
                                           th:field="*{tasks[__${rowStat.index}__].programmingTaskForms[__${row.index}__].testCode}"/>
-                                <span class="input-group-addon">
+                                        <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                  </span>
                                     </div>
@@ -351,7 +351,7 @@
                                     <input type="number" class="form-control"
                                            th:field="*{tasks[__${rowStat.index}__].points}" th:min="1" id="nazwaTest"
                                            required="required"/>
-                                <span class="input-group-addon">
+                                    <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                 </span>
                                 </div>
@@ -368,7 +368,7 @@
                                 <div class="input-group">
                                         <textarea id="preparationsCode" rows="5" class="form-control"
                                                   th:field="*{tasks[__${rowStat.index}__].preparations}"/>
-                                <span class="input-group-addon">
+                                    <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                  </span>
                                 </div>
@@ -381,7 +381,7 @@
                                 <div class="input-group">
                                         <textarea id="answerCode" rows="5" class="form-control"
                                                   th:field="*{tasks[__${rowStat.index}__].answer}"/>
-                                <span class="input-group-addon">
+                                    <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-asterisk"/>
                                  </span>
                                 </div>
