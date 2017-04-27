@@ -1,0 +1,230 @@
+body {
+    background: #eee;
+}
+
+.form-signin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    min-height: 300px;
+    background: #fff;
+    border: 1px solid #bbb;
+    border-radius: 15px;
+    box-sizign: border-box;
+    padding: 30px;
+    margin: -150px 0 0 -200px;
+}
+
+.form-signin .form-signin-heading {
+    text-align: center;
+    border-bottom: 1px dashed #ddd;
+    margin: 0 0 30px 0;
+}
+
+.form-signin p {
+    text-align: right;
+    color: #ccc;
+    padding: 5px 0 20px 0;
+}
+
+.form-signin input {
+    margin: 5px 0;
+}
+
+.navbar-right li a {
+    padding: 14px 5px;
+}
+
+.navbar-right img {
+    height: 20px;
+    border: 1px solid #aaa;
+}
+
+.navbar-right .dropdown-menu > li > a {
+    padding: 3px 20px;
+}
+
+.jumbotron {
+    background: #fff;
+}
+
+.popover {
+    display: block;
+    position: fixed;
+    left: 20px;
+}
+
+.row {
+    position: relative;
+}
+
+.row .usunPytanie {
+    position: absolute;
+    top: 2px;
+    left: -12px;
+    font-size: 22px;
+    background: white;
+    padding: 1px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;
+    padding: 4px 0;
+    margin: 0 0 10px 25px;
+    list-style: none;
+    background-color: #ffffff;
+    border-color: #ccc;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+}
+
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.ui-state-hover, .ui-state-active {
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    background: #0088cc none;
+}
+
+h4 {
+    white-space: pre-line;
+}
+
+.modal.fade.wyniki .modal-dialog {
+    width: 60%;
+}
+
+.jumbotron h1 {
+    font-size: 28px;
+    border-bottom: 1px dashed #ddd;
+    margin: -20px 0 30px 0;
+    text-align: center;
+}
+
+.jumbotron h2 {
+    font-size: 24px;
+}
+
+.popover {
+    display: block;
+    position: fixed;
+    right: 20px;
+    left: auto;
+}
+
+.input-group {
+    display: block;
+}
+
+.input-group-addon {
+    display: none;
+}
+
+.dataTables_wrapper {
+    padding-top: 20px;
+}
+
+a, .table .glyphicon {
+    cursor: pointer !important;
+}
+
+textarea {
+    resize: none !important;
+}
+
+.container {
+    padding: 0 !important;
+}
+
+.stronalogin footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+span.trueClass {
+    color: green;
+    font-weight: bold;
+}
+
+span.falseClass {
+    color: red;
+    font-weight: bold;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-footer button {
+    margin-right: 20px;
+}
+
+.jumbotron h1 {
+    font-size: 28px;
+    border-bottom: 1px dashed #ddd;
+    margin: -20px 0 30px 0;
+    text-align: center;
+}
+
+.jumbotron h2 {
+    font-size: 24px;
+}
+
+.popover {
+    display: block;
+    position: fixed;
+    right: 20px;
+    left: auto;
+}
+
+.input-group {
+    display: block;
+}
+
+.input-group-addon {
+    display: none;
+}
+
+.dataTables_wrapper {
+    padding-top: 20px;
+}

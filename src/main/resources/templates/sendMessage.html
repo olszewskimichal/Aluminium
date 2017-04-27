@@ -1,0 +1,136 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorator="layout">
+<head>
+    <title th:text="#{sendMessage.title}">Wyslij wiadomosc</title>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <form class="form-register" action="" enctype="multipart/form-data" method="post" th:object="${newMessageForm}">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{sendMessage.newMessage}">Nowa wiadomosc</h3>
+            </div>
+            <div class="panel-body">
+                <div th:if="${sukces}" class="alert alert-success" role="alert" th:text="#{notification.send_success}">
+                    Wiadomosc wyslana
+                </div>
+                <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                    <p th:each="err:${#fields.allErrors()}" th:text="${err}">...</p>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <h4 th:text="#{sendMessage.messageReceiver}"></h4>
+
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="receivers" name="receivers"
+                                   th:field="*{receivers}"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <h4 th:text="#{sendMessage.topic}"></h4>
+
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="topic" name="topic" th:field="*{topic}"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <h4 th:text="#{sendMessage.message}"></h4>
+
+                        <div class="input-group">
+                            <textarea rows="20" class="form-control" name="message" th:field="*{message}"></textarea>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" name="submit" id="submit" th:value="#{sendMessage.send}"
+                       class="btn btn-primary pull-right"/>
+
+            </div>
+        </div>
+        <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : 'testing'}"
+               th:value="${_csrf != null ? _csrf.token : 'testing'}"/>
+
+    </form>
+
+</div> <!-- /container -->
+</body>
+<script layout:fragment="customScripts">
+    $(function () {
+        $("#aaa").autocomplete({
+            source: function (request, response) {
+                $.getJSON("/api/users?like=" + request.term, function (data) {
+                    alert(data.responseText.id);
+                    response($.map(data.dealers, function (value, key) {
+                        return {
+                            label: value,
+                            value: key
+                        };
+                    }));
+                });
+            }
+        });
+    });
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $(function () {
+        $("#receivers").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/api/users?like=" + extractLast(request.term),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    delimiter: ",",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.name + " " + item.lastName + " " + item.email,
+                                value: item.email
+                            };
+
+                        }));
+                    }
+                });
+                $.ajax({
+                    url: "/api/users/roles?like=" + extractLast(request.term),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    delimiter: ",",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return {
+                                label: item,
+                                value: item
+                            };
+
+                        }));
+                    }
+                });
+            },
+            focus: function () {
+                return false;
+            },
+            select: function (event, ui) {
+                var terms = split(this.value);
+                terms.pop();
+                terms.push(ui.item.value);
+                terms.push('');
+                this.value = terms.join(', ');
+                return false;
+            }
+        });
+    });
+
+</script>
+</html>
