@@ -5,6 +5,6 @@ jdk:
 before_install:
   - chmod ugo+x mvnw
 install:
-  - mvn clean install
+  - mvn compile
 script:
   - mvn clean verify
