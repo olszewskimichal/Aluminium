@@ -326,7 +326,7 @@ public class TestController {
 
 				//METODA POBRANIA PDF
 				/*
-			    String mimeType = context.getMimeType(fullPath);
+				String mimeType = context.getMimeType(fullPath);
                 if (mimeType == null) {
                     // set to binary type if MIME mapping not found
                     mimeType = "application/octet-stream";
