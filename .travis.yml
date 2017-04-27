@@ -3,5 +3,5 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod ugo+x mvnw
-script:
-  - mvn clean verify
+install:
+  - mvn verify
