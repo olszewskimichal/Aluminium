@@ -44,7 +44,7 @@ public class UserControllerTest {
                 .param("name", "adam")
                 .param("lastName", "malysz")
                 .param("email", "aaaaa@o2.pl")
-                .param("password,","zaq1@WSX")
+                .param("passHash,","zaq1@WSX")
                 .param("confirmPassword,","zaq1@WSX"))
                 .andExpect(redirectedUrl("/user/1"));
     }*/

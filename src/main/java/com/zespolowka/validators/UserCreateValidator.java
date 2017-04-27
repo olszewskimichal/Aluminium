@@ -3,6 +3,7 @@ package com.zespolowka.validators;
 import com.zespolowka.forms.UserCreateForm;
 import com.zespolowka.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,37 +16,36 @@ import org.springframework.validation.Validator;
 @Slf4j
 public class UserCreateValidator implements Validator {
 
-    private final UserService UserService;
+	private final UserService userService;
 
-    @Autowired
-    public UserCreateValidator(UserService UserService) {
-        this.UserService = UserService;
-    }
+	@Autowired
+	public UserCreateValidator(UserService userService) {
+		this.userService = userService;
+	}
 
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return clazz.equals(UserCreateForm.class);
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return clazz.equals(UserCreateForm.class);
+	}
 
-    public void validate(Object target, Errors errors) {
-        UserCreateForm form = (UserCreateForm) target;
-        log.info("Walidacja {}", target);
-        if (form.getPassword() == null || form.getConfirmPassword() == null)
-            errors.rejectValue("password", "password_error");
-        else if (!form.getPassword().equals(form.getConfirmPassword())) {
-            errors.rejectValue("password", "password_error");
-        }
+	@Override
+	public void validate(Object target, Errors errors) {
+		UserCreateForm form = (UserCreateForm) target;
+		log.info("Walidacja {}", target);
+		if (form.getPassHash() == null || form.getConfirmPassword() == null)
+			errors.rejectValue("passHash", "password_error");
+		else if (!form.getPassHash().equals(form.getConfirmPassword())) {
+			errors.rejectValue("passHash", "password_error");
+		}
 
-        if (UserService.getUserByEmail(form.getEmail()).isPresent()) {
-            errors.rejectValue("email", "email_error");
-        }
-    }
+		if (userService.getUserByEmail(form.getEmail()).isPresent()) {
+			errors.rejectValue("email", "email_error");
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "UserCreateValidator{" +
-                "UserServiceImpl=" + UserService +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "UserCreateValidator{" + "UserServiceImpl=" + userService + '}';
+	}
 }

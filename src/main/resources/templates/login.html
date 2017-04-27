@@ -24,8 +24,8 @@
         <label for="username" th:text="#{login.email}" class="sr-only"/>
         <input type="email" name="username" id="username" class="form-control" th:placeholder="#{login.email}"
                required="autofocus"/>
-        <label for="password" th:text="#{login.password}" class="sr-only"></label>
-        <input type="password" name="password" id="password" class="form-control" th:placeholder="#{login.password}"
+        <label for="passHash" th:text="#{login.passHash}" class="sr-only"></label>
+        <input type="passHash" name="passHash" id="passHash" class="form-control" th:placeholder="#{login.passHash}"
                required="required"/>
 
         <p><a th:href="@{/remindPassword}" th:text="#{login.forgotten_password}"></a> | <a th:href="@{/register}"

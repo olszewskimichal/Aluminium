@@ -1,6 +1,7 @@
 package com.zespolowka.entity.user;
 
 import lombok.Data;
+
 import org.springframework.security.core.authority.AuthorityUtils;
 
 /**
@@ -9,23 +10,22 @@ import org.springframework.security.core.authority.AuthorityUtils;
 @Data
 public class CurrentUser extends org.springframework.security.core.userdetails.User {
 
-    private User user;
+	transient User user;
 
-    public CurrentUser(User user) {
-        super(user.getEmail(), user.getPasswordHash(), user.isEnabled(), true, true, user.isAccountNonLocked(),
-                AuthorityUtils.createAuthorityList(user.getRole().name()));
-        this.user = user;
-    }
+	public CurrentUser(User user) {
+		super(user.getEmail(), user.getPasswordHash(), user.isEnabled(), true, true, user.isAccountNonLocked(), AuthorityUtils.createAuthorityList(user.getRole().name()));
+		this.user = user;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public Long getId() {
-        return user.getId();
-    }
+	public Long getId() {
+		return user.getId();
+	}
 
-    public Role getRole() {
-        return user.getRole();
-    }
+	public Role getRole() {
+		return user.getRole();
+	}
 }

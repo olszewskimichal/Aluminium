@@ -1,18 +1,18 @@
 package com.zespolowka.forms;
 
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class SolutionTestForm {
-    private String name;
+	private String name;
 
-    private Long solutionId;
+	private Long solutionId;
 
-    private List<SolutionTaskForm> tasks;
+	private List<SolutionTaskForm> tasks;
 
 }

@@ -60,21 +60,21 @@
                 <div class="row">
                     <div class="form-group col-md-6">
 
-                        <label for="InputPasswordFirst" th:text="#{userEdit.password}"></label>
+                        <label for="InputPasswordFirst" th:text="#{userEdit.passHash}"></label>
 
                         <div class="input-group">
-                            <input type="password" class="form-control" id="InputPasswordFirst"
+                            <input type="passHash" class="form-control" id="InputPasswordFirst"
                                    name="InputPasswordFirst"
-                                   th:placeholder="#{userEdit.password}" th:field="*{password}"/>
+                                   th:placeholder="#{userEdit.passHash}" th:field="*{passHash}"/>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="InputPasswordSecond" th:text="#{userEdit.confirm_password}"></label>
 
                         <div class="input-group">
-                            <input type="password" class="form-control" id="InputPasswordSecond"
+                            <input type="passHash" class="form-control" id="InputPasswordSecond"
                                    name="InputPasswordSecond"
-                                   th:placeholder="#{userEdit.password}" th:field="*{confirmPassword}"/>
+                                   th:placeholder="#{userEdit.passHash}" th:field="*{confirmPassword}"/>
                         </div>
                     </div>
                 </div>

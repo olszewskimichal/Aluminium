@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewMessageForm {
 
-    private String message;
-    private String topic;
-    private String receivers;
-    private User sender;
+	private String message;
+	private String topic;
+	private String receivers;
+	private User sender;
 
 }

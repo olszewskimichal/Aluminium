@@ -52,18 +52,18 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="password" th:text="#{register.password}"/>
+                        <label for="passHash" th:text="#{register.passHash}"/>
 
                         <div class="input-group">
-                            <input id="password" type="password" class="form-control"
-                                   th:placeholder="#{register.password}" required="required" th:field="*{password}"/>
+                            <input id="passHash" type="passHash" class="form-control"
+                                   th:placeholder="#{register.passHash}" required="required" th:field="*{passHash}"/>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="confirmPassword" th:text="#{register.confirm_password}"/>
 
                         <div class="input-group">
-                            <input id="confirmPassword" type="password" class="form-control"
+                            <input id="confirmPassword" type="passHash" class="form-control"
                                    th:placeholder="#{register.confirm_password}" required="required"
                                    th:field="*{confirmPassword}"/>
                         </div>

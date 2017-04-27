@@ -1,5 +1,13 @@
 package com.zespolowka.controller;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.zespolowka.entity.VerificationToken;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserCreateForm;
@@ -8,6 +16,7 @@ import com.zespolowka.service.UserService;
 import com.zespolowka.service.VerificationTokenService;
 import com.zespolowka.validators.UserCreateValidator;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
 /**
  * Created by Pitek on 2015-11-30.
  */
@@ -31,86 +33,84 @@ import java.util.UUID;
 @Slf4j
 public class RegisterController {
 
-    @Autowired
-    private UserService UserService;
+	private static final String USER_CREATE_FORM = "userCreateForm";
+	private static final String REGISTER = "register";
+	private static final String LOGIN = "login";
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private UserCreateValidator userCreateValidator;
+	@Autowired
+	private UserCreateValidator userCreateValidator;
 
-    @Autowired
-    private VerificationTokenService verificationTokenService;
+	@Autowired
+	private VerificationTokenService verificationTokenService;
 
-    @Autowired
-    private SendMailService sendMailService;
+	@Autowired
+	private SendMailService sendMailService;
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerPage(Model model) {
-        log.info("nazwa metody = registerPage");
-        try {
-            model.addAttribute("userCreateForm", new UserCreateForm());
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            log.info(model.toString());
-        }
-        return "register";
-    }
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public String registerPage(Model model) {
+		log.info("nazwa metody = registerPage");
+		try {
+			model.addAttribute(USER_CREATE_FORM, new UserCreateForm());
+		}
+		catch (RuntimeException e) {
+			log.error(e.getMessage(), e);
+			log.info(model.toString());
+		}
+		return REGISTER;
+	}
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerSubmit(@ModelAttribute @Valid UserCreateForm userCreateForm, BindingResult result, Model model, HttpServletRequest servletRequest) {
-        log.info("nazwa metody = registerSubmit");
-        userCreateValidator.validate(userCreateForm, result);
-        if (result.hasErrors()) {
-            log.info(userCreateForm.toString());
-            model.addAttribute("userCreateForm", userCreateForm);
-            return "register";
-        } else {
-            User user = UserService.create(userCreateForm);
-            String token = UUID.randomUUID().toString();
-            VerificationToken verificationToken = verificationTokenService.create(user, token);
-            String url = servletRequest.getRequestURL()
-                    .toString() + "/registrationConfirm?token=" + verificationToken.getToken();
-            sendMailService.sendVerificationMail(url, user);
-            log.info(user.toString());
-            model.addAttribute("userCreateForm", new UserCreateForm());
-            model.addAttribute("confirmRegistration", true);
-            return "register";
-        }
-    }
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String registerSubmit(@ModelAttribute @Valid UserCreateForm userCreateForm, BindingResult result, Model model, HttpServletRequest servletRequest) throws MessagingException {
+		log.info("nazwa metody = registerSubmit");
+		userCreateValidator.validate(userCreateForm, result);
+		if (result.hasErrors()) {
+			log.info(userCreateForm.toString());
+			model.addAttribute(USER_CREATE_FORM, userCreateForm);
+			return REGISTER;
+		}
+		else {
+			User user = userService.create(userCreateForm);
+			String token = UUID.randomUUID().toString();
+			VerificationToken verificationToken = verificationTokenService.create(user, token);
+			String url = servletRequest.getRequestURL().toString() + "/registrationConfirm?token=" + verificationToken.getToken();
+			sendMailService.sendVerificationMail(url, user);
+			log.info(user.toString());
+			model.addAttribute(USER_CREATE_FORM, new UserCreateForm());
+			model.addAttribute("confirmRegistration", true);
+			return REGISTER;
+		}
+	}
 
 
-    @RequestMapping(value = "/register/registrationConfirm", method = RequestMethod.GET)
-    public String confirmRegistration(Model model, @RequestParam("token") String token) {
-        log.info("Potwierdzenie rejestacji");
-        Optional<VerificationToken> verificationToken = verificationTokenService.getVerificationTokenByToken(token);
-        if (!verificationToken.isPresent()) {
-            model.addAttribute("blednyToken", true);
-            return "login";
-        }
-        try {
-            User user = verificationToken.get().getUser();
-            LocalDateTime localDateTime = LocalDateTime.now();
-            long diff = Duration.between(localDateTime, verificationToken.get().getExpiryDate()).toMinutes();
+	@RequestMapping(value = "/register/registrationConfirm", method = RequestMethod.GET)
+	public String confirmRegistration(Model model, @RequestParam("token") String token) {
+		log.info("Potwierdzenie rejestacji");
+		Optional<VerificationToken> verificationToken = verificationTokenService.getVerificationTokenByToken(token);
+		if (!verificationToken.isPresent()) {
+			model.addAttribute("blednyToken", true);
+			return LOGIN;
+		}
+		else {
+			User user = verificationToken.get().getUser();
+			LocalDateTime localDateTime = LocalDateTime.now();
+			long diff = Duration.between(localDateTime, verificationToken.get().getExpiryDate()).toMinutes();
 
-            if (diff < 0L) {
-                log.info(String.format("Token juz jest nieaktulany \n dataDO= %s \n",
-                        verificationToken.get().getExpiryDate()));
-                model.addAttribute("nieaktualny", true);
-                return "login";
-            } else {
-                log.info("Token jest aktualny - aktywacja konta");
-                user.setEnabled(true);
-                UserService.update(user);
-                model.addAttribute("aktualny", true);
-                verificationTokenService.deleteVerificationTokenByUser(user);
-                return "login";
-            }
-        } catch (Exception e) {
-            log.info(token);
-            log.info(e.getMessage(), e);
-            log.info(verificationToken.toString());
-
-        }
-        return "login";
-    }
+			if (diff < 0L) {
+				log.info(String.format("Token juz jest nieaktulany %n dataDO= %s %n", verificationToken.get().getExpiryDate()));
+				model.addAttribute("nieaktualny", true);
+				return LOGIN;
+			}
+			else {
+				log.info("Token jest aktualny - aktywacja konta");
+				user.setEnabled(true);
+				userService.update(user);
+				model.addAttribute("aktualny", true);
+				verificationTokenService.deleteVerificationTokenByUser(user);
+				return LOGIN;
+			}
+		}
+	}
 
 }

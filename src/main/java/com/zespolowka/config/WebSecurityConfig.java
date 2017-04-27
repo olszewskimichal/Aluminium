@@ -18,55 +18,27 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Profile("!test")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
-    private final AuthenticationFailureHandler authenticationFailureHandler;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+	private final UserDetailsService userDetailsService;
+	private final AuthenticationFailureHandler authenticationFailureHandler;
+	private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public WebSecurityConfig(UserDetailsService userDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler) {
-        this.userDetailsService = userDetailsService;
-        this.authenticationFailureHandler = authenticationFailureHandler;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-    }
+	public WebSecurityConfig(UserDetailsService userDetailsService, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationSuccessHandler authenticationSuccessHandler) {
+		this.userDetailsService = userDetailsService;
+		this.authenticationFailureHandler = authenticationFailureHandler;
+		this.authenticationSuccessHandler = authenticationSuccessHandler;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        http
-                .authorizeRequests()
-                .antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword",
-                        "/login-expired")
-                .permitAll()
-                .anyRequest().fullyAuthenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login-error")
-                .failureHandler(authenticationFailureHandler)
-                .successHandler(authenticationSuccessHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .deleteCookies("remember-me")
-                .permitAll()
-                .and()
-                .rememberMe()
-                .and()
-                .sessionManagement()
-                .maximumSessions(1).expiredUrl("/login-expired")
-                .and().and()
-                .csrf().disable();
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		filter.setEncoding("UTF-8");
+		filter.setForceEncoding(true);
+		http.authorizeRequests().antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword", "/login-expired").permitAll().anyRequest().fullyAuthenticated().and().formLogin().loginPage("/login").failureUrl("/login-error").failureHandler(authenticationFailureHandler).successHandler(authenticationSuccessHandler).permitAll().and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("remember-me").permitAll().and().rememberMe().and().sessionManagement().maximumSessions(1).expiredUrl("/login-expired").and().and().csrf().disable();
+	}
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(new BCryptPasswordEncoder());
-    }
-
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	}
 
 }
