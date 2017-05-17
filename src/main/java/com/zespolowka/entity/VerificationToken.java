@@ -1,10 +1,11 @@
 package com.zespolowka.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
@@ -26,8 +27,8 @@ public class VerificationToken {
 
 	private String token;
 
-	@OneToOne(targetEntity = User.class, optional = false)
-	@JoinColumn(nullable = false, name = "user_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
 	private User user;
 
 	private LocalDateTime expiryDate;

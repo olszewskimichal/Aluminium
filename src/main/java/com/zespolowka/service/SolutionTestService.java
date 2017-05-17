@@ -187,10 +187,10 @@ public class SolutionTestService {
 			List<Long> integerList = (List<Long>) httpSession.getAttribute(INTEGER_LIST);
 			if (environment.getActiveProfiles().length > 0 && "prod".equals(environment.getActiveProfiles()[0])) {
 				Long minimumId = Collections.min(integerList);
-				taskSolution.setTask(solutionTest.getTest().getTasks().get(integerList.get(taskNo++).intValue() - minimumId.intValue()));
+				solutionTest.getTest().getTasks().get(integerList.get(taskNo++).intValue() - minimumId.intValue()).addTaskSolution(taskSolution);
 			}
 			else
-				taskSolution.setTask(solutionTest.getTest().getTasks().get(taskNo++));
+				solutionTest.getTest().getTasks().get(taskNo++).addTaskSolution(taskSolution);
 			if (taskSolution instanceof TaskClosedSolution) {
 				TaskClosedSolution taskSol = (TaskClosedSolution) taskSolution;
 				TaskClosed taskClo = (TaskClosed) taskSol.getTask();
@@ -233,7 +233,7 @@ public class SolutionTestService {
 					}
 				}
 				solutionTest.setPoints(solutionTest.getPoints().add(taskSol.getPoints()));
-				solutionTest.getSolutionTasks().add(taskSol);
+				solutionTest.addSolutionTask(taskSol);
 			} if (taskSolution instanceof TaskOpenSolution) {
 				TaskOpenSolution taskSol = (TaskOpenSolution) taskSolution;
 				TaskOpen taskOp = (TaskOpen) taskSol.getTask();
@@ -250,7 +250,7 @@ public class SolutionTestService {
 						taskSol.setPoints(taskOp.getMaxPoints());
 					}
 					else taskSol.setPoints(BigDecimal.ZERO);
-				} solutionTest.getSolutionTasks().add(taskSol);
+				} solutionTest.addSolutionTask(taskSol);
 			} if (taskSolution instanceof TaskProgrammingSolution) {
 				TaskProgrammingSolution taskSol = (TaskProgrammingSolution) taskSolution;
 				TaskProgramming taskProgramming = (TaskProgramming) taskSol.getTask();
@@ -316,7 +316,7 @@ public class SolutionTestService {
 				}
 				FileUtils.deleteDirectory(new File(resultDir + userDirectory));
 				FileUtils.deleteDirectory(new File(dir + userDirectory));
-				solutionTest.getSolutionTasks().add(taskSol);
+				solutionTest.addSolutionTask(taskSol);
 			} if (taskSolution instanceof TaskSqlSolution) {
 				TaskSqlSolution taskSqlSolution = (TaskSqlSolution) taskSolution;
 				TaskSql taskSql = (TaskSql) taskSqlSolution.getTask();
@@ -363,7 +363,7 @@ public class SolutionTestService {
 				}
 				FileUtils.deleteDirectory(new File(resultDir + userDirectory));
 				FileUtils.deleteDirectory(new File(dir + userDirectory));
-				solutionTest.getSolutionTasks().add(taskSqlSolution);
+				solutionTest.addSolutionTask(taskSqlSolution);
 			}
 		}
 		catch (Exception e) {
@@ -377,7 +377,6 @@ public class SolutionTestService {
 	public SolutionTest create(SolutionTest solutionTest, SolutionTestForm solutionTestForm) {
 		try {
 			List<SolutionTaskForm> solutionTaskForms = solutionTestForm.getTasks();
-			solutionTest.setSolutionTasks(new ArrayList<>());
 			solutionTest.setPoints(BigDecimal.ZERO); this.taskNo = 0;
 			for (SolutionTaskForm solutionTaskForm : solutionTaskForms)
 				if (solutionTaskForm.getTaskType() == SolutionTaskForm.CLOSEDTASK) {
@@ -425,18 +424,13 @@ public class SolutionTestService {
 	public SolutionTestForm createFormWithExistingSolution(SolutionTest solutionTest) {
 		this.taskNo = 0;
 		SolutionTestForm solutionTestForm = new SolutionTestForm();
-		try {
+
 			solutionTestForm.setName(solutionTest.getTest().getName());
 			solutionTestForm.setSolutionId(solutionTest.getId());
 			List<SolutionTaskForm> solutionTaskFormList = solutionTest.getSolutionTasks().stream().map(SolutionTaskForm::new).collect(Collectors.toList());
 			solutionTestForm.setTasks(solutionTaskFormList);
 			this.taskNo = 0;
-		}
-		catch (Exception e) {
-			log.info(e.getMessage(), e);
-			log.info(solutionTest.toString());
-			log.info(solutionTestForm.toString());
-		} return solutionTestForm;
+		 return solutionTestForm;
 	}
 
 	public String executeCommand(String command) throws IOException, InterruptedException {

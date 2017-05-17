@@ -9,12 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.zespolowka.entity.createtest.Test;
@@ -30,29 +32,29 @@ public class SolutionTest {
 	@GeneratedValue
 	private Long id;
 
-	@OneToOne(targetEntity = Test.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTest")
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
 	private Test test;
 	private Integer attempt;
 	private LocalDateTime beginSolution;
 	private LocalDateTime endSolution;
 	private BigDecimal points;
-	@ManyToOne
-	private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "userId")
 
+	private User user;
 	@Enumerated(EnumType.STRING)
+
 	private SolutionStatus solutionStatus;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "solutionTest", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TaskSolution> solutionTasks;
 
 
 	public SolutionTest(Test test, User user) {
 		this.solutionTasks = new ArrayList<>();
-		this.solutionStatus = SolutionStatus.OPEN;
-		this.test = test;
-		this.points = BigDecimal.ZERO;
-		this.user = user;
+		this.solutionStatus = SolutionStatus.OPEN; this.test = test;
+		this.points = BigDecimal.ZERO; this.user = user;
 	}
 
 	public Long secondsToEnd() {
@@ -60,5 +62,19 @@ public class SolutionTest {
 		Timestamp timestamp1 = Timestamp.valueOf(LocalDateTime.now());
 		Long value = timestamp.getTime() - timestamp1.getTime();
 		return value / 1000L;
+	}
+
+	public void addSolutionTask(TaskSolution solution) {
+		this.solutionTasks.add(solution);
+		solution.setSolutionTest(this);
+	}
+
+	public void removeSolutionTask(TaskSolution solution) {
+		solutionTasks.remove(solution);
+		solution.setSolutionTest(null);
+	}
+
+	public List<TaskSolution> getSolutionTasks() {
+		return Collections.unmodifiableList(solutionTasks);
 	}
 }

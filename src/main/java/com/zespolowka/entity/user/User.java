@@ -1,14 +1,19 @@
 package com.zespolowka.entity.user;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zespolowka.entity.solution.test.SolutionTest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,6 +57,9 @@ public class User {
 		this.enabled = false; this.loginTries = 3;
 	}
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<SolutionTest> solutionTests = new ArrayList<>();
+
 
 	public User(String name, String lastName, String email, String passwordHash) {
 		this.name = name; this.lastName = lastName;
@@ -82,6 +90,16 @@ public class User {
 
 	public void restartPassword(String randomHash) {
 		passwordHash = new BCryptPasswordEncoder().encode(randomHash);
+	}
+
+	public void addSolution(SolutionTest solutionTest) {
+		this.solutionTests.add(solutionTest);
+		solutionTest.setUser(this);
+	}
+
+	public void removeSolution(SolutionTest solutionTest) {
+		solutionTests.remove(solutionTest);
+		solutionTest.setUser(null);
 	}
 
 }
