@@ -22,9 +22,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Modifying
 	List<Notification> deleteByUserId(long userId);
 
-	Long countByUnreadAndUserId(boolean unread, Long userId);
+	Long countByStatusAndUserId(boolean status, Long userId);
 
-	Long countByUnreadAndUserRole(boolean unread, Role userRole);
+	Long countByStatusAndUserRole(boolean status, Role userRole);
 
 	Page<Notification> findAllByUserIdOrUserRoleOrderByDateDesc(Pageable var1, Long userId, Role userRole);
 

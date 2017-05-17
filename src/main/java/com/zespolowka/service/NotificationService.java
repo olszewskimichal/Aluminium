@@ -42,17 +42,12 @@ public class NotificationService {
 
 	public Long countByUnreadAndUserId(boolean unread, Long userId) {
 		log.info("countByUnread={}AndUserId={}", unread, userId);
-		return notificationRepository.countByUnreadAndUserId(unread, userId);
+		return notificationRepository.countByStatusAndUserId(unread, userId);
 	}
 
 	public Long countByUnreadAndUserRole(boolean unread, Role userRole) {
 		log.info("countByUnread={}AndUserId={}", unread, userRole);
-		return notificationRepository.countByUnreadAndUserRole(unread, userRole);
-	}
-
-	public Notification createNotification(Notification notification) {
-		log.info("createNotif{}", notification);
-		return notificationRepository.save(notification);
+		return notificationRepository.countByStatusAndUserRole(unread, userRole);
 	}
 
 	public Page<Notification> findAllPageable(Pageable pageable, Long userId, Role userRol) {

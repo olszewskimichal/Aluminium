@@ -53,7 +53,7 @@ public class VerificationTokenService {
 			}
 			else {
 				log.info("Token jest aktualny - aktywacja konta");
-				user.setEnabled(true);
+				user.enable();
 				deleteVerificationTokenByUser(user);
 				return "aktualny";
 			}

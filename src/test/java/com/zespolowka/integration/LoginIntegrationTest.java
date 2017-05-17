@@ -53,7 +53,8 @@ public class LoginIntegrationTest {
 	public void shouldLoginWithCorrectLoginAndPasswordAndActiveUser() throws Exception {
 		//given
 		User user = new UserBuilder("name", "lastName").withEmail("emailTest@o2.pl").build();
-		user.setEnabled(true);
+		user.unblock();
+		user.enable();
 		userRepository.save(user);
 		String userLogin = "emailTest@o2.pl";
 		String password = "zaq1@WSX";

@@ -26,15 +26,15 @@ public class DevDBConfig {
 		User system = new User(SYSTEM, SYSTEM, SYSTEM, new BCryptPasswordEncoder().encode(SYSTEM));
 		repository.save(system);
 		User user = new User("Uzytkownik", "Ambitny", "aaa1@o2.pl", new BCryptPasswordEncoder().encode("aaa"));
-		user.setEnabled(true);
+		user.unblock();
 		repository.save(user);
 		user = new User("Admin", "admin", "aaa2@o2.pl", new BCryptPasswordEncoder().encode("1"));
-		user.setEnabled(true);
-		user.setRole(Role.ADMIN);
+		user.unblock();
+		user.changeRole(Role.ADMIN);
 		repository.save(user);
 		user = new User("SuperAdmin", "superadmin", "aaa3@o2.pl", new BCryptPasswordEncoder().encode("a"));
-		user.setRole(Role.SUPERADMIN);
-		user.setEnabled(true);
+		user.changeRole(Role.SUPERADMIN);
+		user.unblock();
 		repository.save(user);
 	}
 }

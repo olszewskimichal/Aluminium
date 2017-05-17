@@ -61,36 +61,22 @@ public class UserService {
 	}
 
 	public User create(UserCreateForm form, String registerUrl) throws MessagingException {
-		User user = new User();
-		user.setName(form.getName());
-		user.setLastName(form.getLastName());
-		user.setEmail(form.getEmail());
-		user.setPasswordHash(new BCryptPasswordEncoder().encode(form.getPassword()));
-		user.setRole(form.getRole());
+		User user = new User(form.getName(), form.getLastName(), form.getEmail(), new BCryptPasswordEncoder().encode(form.getPassword()));
+		user.changeRole(form.getRole());
 		log.info("Stworzono uzytkownika");
 		//TODO naprawic te chujnie
 		//String token = UUID.randomUUID().toString();
 		//VerificationToken verificationToken = verificationTokenService.create(user, token);
 		//String url = registerUrl + "/registrationConfirm?token=" + verificationToken.getToken();
 		//mailService.sendVerificationMail(url, user);
-		log.info(user.toString());
-		return userRepository.save(user);
+		log.info(user.toString()); return userRepository.save(user);
 	}
 
 
 	public User editUser(UserEditForm userEditForm) {
 		User user = getUserById(userEditForm.getId()).orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", userEditForm.getId())));
-		user.setName(userEditForm.getName());
-		user.setLastName(userEditForm.getLastName());
-		user.setEmail(userEditForm.getEmail());
-		user.setRole(userEditForm.getRole());
-		if (userEditForm.getPassword() == null)
-			userEditForm.setPassword("");
-		if (!userEditForm.getPassword().isEmpty()) {
-			user.setPasswordHash(new BCryptPasswordEncoder().encode(userEditForm.getPassword()));
-		}
 		log.info("Edytowano uzytkownika");
-		return userRepository.save(user);
+		return userRepository.updateUser(userEditForm.getName(), userEditForm.getLastName(), userEditForm.getEmail(), userEditForm.getRole(), userEditForm.getPassword() != null ? new BCryptPasswordEncoder().encode(userEditForm.getPassword()) : user.getPasswordHash(), user.getId());
 	}
 
 	public User update(User user) {
@@ -102,12 +88,10 @@ public class UserService {
 		User user = getUserById(userId).orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", userId)));
 		if (Objects.equals(currentUser.getId(), userId) || "ADMIN".equals(currentUser.getRole().name()) && "SUPERADMIN".equals(user.getRole().name())) {
 			return false;
-		}
-		notificationService.deleteMessagesBySender(user);
+		} notificationService.deleteMessagesBySender(user);
 		notificationService.deleteMessagesByUserId(user.getId());
 		verificationTokenService.deleteVerificationTokenByUser(userRepository.findOne(userId));
-		userRepository.delete(userId);
-		return true;
+		userRepository.delete(userId); return true;
 	}
 
 	public User getCurrentUser() {
@@ -120,12 +104,14 @@ public class UserService {
 		User currentUser = getCurrentUser();
 		User user = getUserById(userId).orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", userId)));
 		if (currentUser.getRole().equals(Role.SUPERADMIN)) {
-			user.setEnabled(!user.isEnabled());
-			if (user.isEnabled())
+			if (user.isEnabled()) {
+				user.disable();
 				return new ImmutablePair<>(true, "Deaktywowano uzytkownika " + user.getEmail());
-			else
+			}
+			else {
+				user.enable();
 				return new ImmutablePair<>(true, "Aktywowano uzytkownika " + user.getEmail());
-		}
-		return new ImmutablePair<>(false, "Nie masz uprawnień");
+			}
+		} return new ImmutablePair<>(false, "Nie masz uprawnień");
 	}
 }

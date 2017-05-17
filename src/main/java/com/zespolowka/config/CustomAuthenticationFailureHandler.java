@@ -51,7 +51,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 					userService.update(user);
 				}
 				else {
-					user.setAccountNonLocked(false);
+					user.block();
 					userService.update(user);
 					log.info("User blocked");
 				}

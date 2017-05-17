@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -61,7 +60,7 @@ public class SendMailService {
 			message.setTo(user.getEmail());
 			message.setSubject("Przypomnienie Hasła");
 			String newPassword = sb.toString();
-			user.setPasswordHash(new BCryptPasswordEncoder().encode(newPassword));
+			user.restartPassword(newPassword);
 			userService.update(user);
 			message.setText("<html><body><h4>Witaj " + user.getName() + "!</h4><p>Twoje nowe hasło to: " + newPassword + "</p></body></html>", true);
 			mailSender.send(mimeMessage);
