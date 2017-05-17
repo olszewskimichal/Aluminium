@@ -1,9 +1,7 @@
 package com.zespolowka.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,8 +13,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Profile("!test")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final UserDetailsService userDetailsService;
 	private final AuthenticationFailureHandler authenticationFailureHandler;
@@ -33,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();
 		filter.setEncoding("UTF-8");
 		filter.setForceEncoding(true);
-		http.authorizeRequests().antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword", "/login-expired").permitAll().anyRequest().fullyAuthenticated().and().formLogin().loginPage("/login").failureUrl("/login-error").failureHandler(authenticationFailureHandler).successHandler(authenticationSuccessHandler).permitAll().and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("remember-me").permitAll().and().rememberMe().and().sessionManagement().maximumSessions(1).expiredUrl("/login-expired").and().and().csrf().disable();
+		http.authorizeRequests().antMatchers("/register", "/login**", "/register/registrationConfirm**", "/remindPassword", "/login-expired", "/css/**", "/images/**").permitAll().anyRequest().fullyAuthenticated().and().formLogin().loginPage("/login").failureUrl("/login-error").failureHandler(authenticationFailureHandler).successHandler(authenticationSuccessHandler).permitAll().and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("remember-me").permitAll().and().rememberMe().and().sessionManagement().maximumSessions(1).expiredUrl("/login-expired").and().and().csrf().disable();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import com.zespolowka.entity.Notification;
+import com.zespolowka.entity.user.CurrentUser;
 import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.NewMessageForm;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +40,6 @@ public class NotificationService {
 		return notificationRepository.findOne(id);
 	}
 
-
-	public Collection<Notification> findTop5ByUserIdOrUserRoleOrderByDateDesc(Long userId, Role userRole) {
-		log.info("findTop5ByUserId={}OrUserRole={}OrderByDateDesc = ", userId, userRole);
-		return notificationRepository.findTop5ByUserIdOrUserRoleOrderByDateDesc(userId, userRole);
-	}
-
 	public Long countByUnreadAndUserId(boolean unread, Long userId) {
 		log.info("countByUnread={}AndUserId={}", unread, userId);
 		return notificationRepository.countByUnreadAndUserId(unread, userId);
@@ -65,12 +61,14 @@ public class NotificationService {
 
 	public Notification changeStatus(Long idNotification) {
 		Notification notification = notificationRepository.getOne(idNotification);
-		notification.setUnread(false);
+		notification.changeStatus(false);
 		return notificationRepository.save(notification);
 	}
 
 	public void sendMessage(NewMessageForm form) {
-
+		CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		log.info("Curr:{}", currentUser.getUser());
+		form.setSender(currentUser.getUser());
 		String receivers;
 		if (form.getReceivers().endsWith(", "))
 			receivers = form.getReceivers().substring(0, form.getReceivers().length() - 2);
@@ -118,6 +116,13 @@ public class NotificationService {
 
 	public void deleteMessagesBySender(User user) {
 		notificationRepository.deleteMessagesBySender(user);
+	}
+
+	@Transactional
+	public Notification readNotification(Integer notificationId) {
+		Notification notif = getNotificationById(notificationId.longValue());
+		notif.changeStatus(false);
+		return notif;
 	}
 }
 

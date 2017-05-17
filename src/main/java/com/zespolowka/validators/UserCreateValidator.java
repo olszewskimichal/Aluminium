@@ -33,10 +33,10 @@ public class UserCreateValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		UserCreateForm form = (UserCreateForm) target;
 		log.info("Walidacja {}", target);
-		if (form.getPassHash() == null || form.getConfirmPassword() == null)
-			errors.rejectValue("passHash", "password_error");
-		else if (!form.getPassHash().equals(form.getConfirmPassword())) {
-			errors.rejectValue("passHash", "password_error");
+		if (form.getPassword() == null || form.getConfirmPassword() == null)
+			errors.rejectValue("password", "password_error");
+		else if (!form.getPassword().equals(form.getConfirmPassword())) {
+			errors.rejectValue("password", "password_error");
 		}
 
 		if (userService.getUserByEmail(form.getEmail()).isPresent()) {

@@ -2,6 +2,8 @@ package com.zespolowka.builders;
 
 import com.zespolowka.entity.user.User;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 /**
  * Created by Pitek on 2015-12-03.
  */
@@ -24,6 +26,6 @@ public class UserBuilder {
 	}
 
 	public User build() {
-		return new User(name, lastName, email, passwordHash);
+		return new User(name, lastName, email, new BCryptPasswordEncoder().encode(passwordHash));
 	}
 }

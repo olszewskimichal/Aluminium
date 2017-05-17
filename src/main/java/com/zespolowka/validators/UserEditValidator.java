@@ -19,10 +19,12 @@ import org.springframework.validation.Validator;
 @Slf4j
 public class UserEditValidator implements Validator {
 	private final UserService userService;
+	private final ChangePasswordValidator passwordValidator;
 
 	@Autowired
-	public UserEditValidator(UserService userService) {
+	public UserEditValidator(UserService userService, ChangePasswordValidator passwordValidator) {
 		this.userService = userService;
+		this.passwordValidator = passwordValidator;
 	}
 
 	@Override
@@ -50,8 +52,8 @@ public class UserEditValidator implements Validator {
 		}
 		if (!form.getRole().equals(user.getRole()) && !user.getRole().equals(SUPERADMIN)) {
 			errors.rejectValue("role", "role_error");
-
 		}
+		passwordValidator.validate(form, errors);
 	}
 
 }

@@ -34,26 +34,19 @@ public class UsersController {
 	@RequestMapping("/users")
 	public String getUsersPage(Model model) {
 		log.info("nazwa metody = getUsersPage");
-		try {
-			model.addAttribute("Users", userService.getAllUsers());
-
-			model.addAttribute("usersEditForm", new UserEditForm(new User()));
-		}
-		catch (RuntimeException e) {
-			log.error(e.getMessage(), e);
-			log.info("{}\n{}", model.toString(), userService.getAllUsers().toString());
-		}
-
+		model.addAttribute("Users", userService.getAllUsers());
+		model.addAttribute("usersEditForm", new UserEditForm(new User()));
 		return "users";
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
-	public String saveEditedUser(@ModelAttribute @Valid final UserEditForm usersEditForm, final Errors errors) {
+	public String saveEditedUser(@ModelAttribute @Valid final UserEditForm usersEditForm, final Errors errors, Model model) {
 
 		log.info("nazwa metody = saveUser");
 		usersEditValidator.validate(usersEditForm, errors);
 		if (errors.hasErrors()) {
+			model.addAttribute("errorOnEditUser", true);
 			return "redirect:/users";
 		}
 		else {

@@ -23,10 +23,10 @@ public class ChangePasswordValidator implements Validator {
 		log.info("Walidacja hasla {}", target);
 		if (!form.getPassword().isEmpty()) {
 			if (!form.getPassword().equals(form.getConfirmPassword())) {
-				errors.rejectValue("passHash", "password_error");
+				errors.rejectValue("password", "password_error");
 			}
 			if (!form.getPassword().matches("^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$")) {
-				errors.rejectValue("passHash", "passwordlength_error");
+				errors.rejectValue("password", "passwordlength_error");
 			}
 		}
 	}

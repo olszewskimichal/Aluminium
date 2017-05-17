@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import com.zespolowka.entity.user.User;
-import com.zespolowka.exceptions.LoginFailedException;
 import com.zespolowka.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,9 +56,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 					log.info("User blocked");
 				}
 			}
-			catch (Exception e) {
-				log.info(e.getMessage());
-				throw new LoginFailedException(email);
+			catch (UsernameNotFoundException e) {
+				log.error("Nieprawidlowy uzytkownik");
 			}
 		}
 

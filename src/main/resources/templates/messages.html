@@ -8,7 +8,7 @@
 <div layout:fragment="content" class="container" ng-init="getNotifications()">
     <h1 th:text="#{messages}"/>
 
-    <div class="list-group" th:attr="ng-init='setNotificationId('+${idNotification}+')'">
+    <div class="list-group" th:attr="ng-init='setNotificationId('+${idActiveNotification}+')'">
         <a ng-repeat="notification in data" ng-click="changeNotificationStatus(notification.id)" href=""
            th:attr="ng-class='(({{notification.id}}==activeNotification)) ? \'list-group-item active\' : \'list-group-item\''">
             <h4 class="list-group-item-heading">{{notification.topic}}</h4>

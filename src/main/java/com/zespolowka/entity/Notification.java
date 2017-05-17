@@ -14,13 +14,13 @@ import java.util.Date;
 
 import com.zespolowka.entity.user.Role;
 import com.zespolowka.entity.user.User;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "NotificationTable")
-@Data
 @NoArgsConstructor
+@Getter
 public class Notification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,8 +31,8 @@ public class Notification {
 	private String message;
 	private String topic;
 	private Date date;
-	private boolean unread;
-	@OneToOne(targetEntity = User.class, orphanRemoval = false)
+	private boolean status;
+	@OneToOne(targetEntity = User.class)
 	private User sender;
 	private long userId;
 
@@ -42,22 +42,13 @@ public class Notification {
 
 
 	public Notification(String message, String topic, long userId, User sender) { //data auto
-		this.date = new Date();
-		this.message = message;
-		this.topic = topic;
-		this.userId = userId;
-		this.unread = true;
-		this.userRole = null;
-		this.sender = sender;
+		this.date = new Date(); this.message = message;
+		this.topic = topic; this.userId = userId; this.status = true;
+		this.userRole = null; this.sender = sender;
 	}
 
-	public Notification(String message, String topic, Date date, Role userRole, User sender) {
-		this.message = message;
-		this.topic = topic;
-		this.date = date;
-		this.userRole = userRole;
-		this.unread = true;
-		this.userId = -1L;
-		this.sender = sender;
+	public void changeStatus(Boolean status) {
+		this.status = status;
 	}
+
 }

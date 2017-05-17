@@ -30,18 +30,18 @@ public class UserCreateForm {
 
 	@NotBlank
 	@Pattern(regexp = "^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$")
-	private String passHash;
+	private String password;
 
 	@NotBlank
 	private String confirmPassword;
 
 	private Role role = Role.USER;
 
-	public UserCreateForm(String name, String lastName, String email, String passHash, String confirmPassword) {
+	public UserCreateForm(String name, String lastName, String email, String password, String confirmPassword) {
 		this.name = name;
 		this.lastName = lastName;
 		this.email = email;
-		this.passHash = passHash;
+		this.password = password;
 		this.confirmPassword = confirmPassword;
 	}
 

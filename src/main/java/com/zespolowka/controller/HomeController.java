@@ -26,14 +26,8 @@ public class HomeController {
 	@RequestMapping(value = "/")
 	public String homePage(Model model) {
 		log.info("nazwa metody = homePage");
-		try {
-			model.addAttribute("archiveTest", testService.getTestByEndDateBefore(LocalDate.now()));
-			model.addAttribute("activeTest", testService.getTestByEndDateAfter(LocalDate.now().minusDays(1)));
-		}
-		catch (RuntimeException e) {
-			log.error(e.getMessage(), e);
-
-		}
+		model.addAttribute("archiveTest", testService.getTestByEndDateBefore(LocalDate.now()));
+		model.addAttribute("activeTest", testService.getTestByEndDateAfter(LocalDate.now().minusDays(1)));
 		return "index";
 	}
 

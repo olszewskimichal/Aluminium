@@ -1,4 +1,4 @@
-package com.zespolowka;
+package com.zespolowka.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -6,9 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.zespolowka.service.UserService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,9 +26,6 @@ public class RegisterControllerTest {
 	@Autowired
 	private WebApplicationContext wac;
 
-	@Autowired
-	private UserService userService;
-
 	private MockMvc mvc;
 
 
@@ -41,14 +36,13 @@ public class RegisterControllerTest {
 
 
 	@Test
-	public void shoud_show_register_page() throws Exception {
+	public void should_show_register_page() throws Exception {
 		mvc.perform(get("/register")).andExpect(status().isOk()).andExpect(view().name("register"));
 	}
 
 	@Test
-	@Ignore
 	public void should_process_registration() throws Exception {
-		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a1@o2.pl").param("passHash", "zaq1@WSX").param("confirmPassword", "zaq1@WSX")).andExpect(model().errorCount(0));
+		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a1@o2.pl").param("password", "zaq1@WSX").param("confirmPassword", "zaq1@WSX")).andExpect(model().errorCount(0));
 	}
 
 	@Test
@@ -58,17 +52,17 @@ public class RegisterControllerTest {
 
 	@Test
 	public void should_failed_password_confirmation() throws Exception {
-		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a2@o2.pl").param("passHash", "zaq1@WSX").param("confirmPassword", "zaq1@WSXa")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
+		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a2@o2.pl").param("password", "zaq1@WSX").param("confirmPassword", "zaq1@WSXa")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
 	}
 
 	@Test
 	public void should_failed_with_easy_password() throws Exception {
-		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a3@o2.pl").param("passHash", "11111111").param("confirmPassword", "11111111")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
+		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "a3@o2.pl").param("password", "11111111").param("confirmPassword", "11111111")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
 	}
 
 	@Test
 	public void shoud_failed_with_existed_email() throws Exception {
-		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "aaa3@o2.pl").param("passHash", "zaq1@WSX").param("confirmPassword", "zaq1@WSX")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
+		mvc.perform(post("/register").param("name", "adam").param("lastName", "malysz").param("email", "aaa3@o2.pl").param("password", "zaq1@WSX").param("confirmPassword", "zaq1@WSX")).andExpect(status().isOk()).andExpect(view().name("register")).andExpect(model().errorCount(1));
 	}
 
 }

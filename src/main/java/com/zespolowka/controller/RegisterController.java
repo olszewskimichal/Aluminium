@@ -3,15 +3,8 @@ package com.zespolowka.controller;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
-import com.zespolowka.entity.VerificationToken;
-import com.zespolowka.entity.user.User;
 import com.zespolowka.forms.UserCreateForm;
-import com.zespolowka.service.SendMailService;
 import com.zespolowka.service.UserService;
 import com.zespolowka.service.VerificationTokenService;
 import com.zespolowka.validators.UserCreateValidator;
@@ -37,27 +30,25 @@ public class RegisterController {
 	private static final String REGISTER = "register";
 	private static final String LOGIN = "login";
 	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@Autowired
-	private UserCreateValidator userCreateValidator;
+	private final UserCreateValidator userCreateValidator;
 
 	@Autowired
-	private VerificationTokenService verificationTokenService;
+	private final VerificationTokenService verificationTokenService;
 
-	@Autowired
-	private SendMailService sendMailService;
+
+	public RegisterController(UserService userService, UserCreateValidator userCreateValidator, VerificationTokenService verificationTokenService) {
+		this.userService = userService;
+		this.userCreateValidator = userCreateValidator;
+		this.verificationTokenService = verificationTokenService;
+	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String registerPage(Model model) {
 		log.info("nazwa metody = registerPage");
-		try {
-			model.addAttribute(USER_CREATE_FORM, new UserCreateForm());
-		}
-		catch (RuntimeException e) {
-			log.error(e.getMessage(), e);
-			log.info(model.toString());
-		}
+		model.addAttribute(USER_CREATE_FORM, new UserCreateForm());
 		return REGISTER;
 	}
 
@@ -71,12 +62,7 @@ public class RegisterController {
 			return REGISTER;
 		}
 		else {
-			User user = userService.create(userCreateForm);
-			String token = UUID.randomUUID().toString();
-			VerificationToken verificationToken = verificationTokenService.create(user, token);
-			String url = servletRequest.getRequestURL().toString() + "/registrationConfirm?token=" + verificationToken.getToken();
-			sendMailService.sendVerificationMail(url, user);
-			log.info(user.toString());
+			userService.create(userCreateForm, servletRequest.getRequestURL().toString());
 			model.addAttribute(USER_CREATE_FORM, new UserCreateForm());
 			model.addAttribute("confirmRegistration", true);
 			return REGISTER;
@@ -87,30 +73,8 @@ public class RegisterController {
 	@RequestMapping(value = "/register/registrationConfirm", method = RequestMethod.GET)
 	public String confirmRegistration(Model model, @RequestParam("token") String token) {
 		log.info("Potwierdzenie rejestacji");
-		Optional<VerificationToken> verificationToken = verificationTokenService.getVerificationTokenByToken(token);
-		if (!verificationToken.isPresent()) {
-			model.addAttribute("blednyToken", true);
-			return LOGIN;
-		}
-		else {
-			User user = verificationToken.get().getUser();
-			LocalDateTime localDateTime = LocalDateTime.now();
-			long diff = Duration.between(localDateTime, verificationToken.get().getExpiryDate()).toMinutes();
-
-			if (diff < 0L) {
-				log.info(String.format("Token juz jest nieaktulany %n dataDO= %s %n", verificationToken.get().getExpiryDate()));
-				model.addAttribute("nieaktualny", true);
-				return LOGIN;
-			}
-			else {
-				log.info("Token jest aktualny - aktywacja konta");
-				user.setEnabled(true);
-				userService.update(user);
-				model.addAttribute("aktualny", true);
-				verificationTokenService.deleteVerificationTokenByUser(user);
-				return LOGIN;
-			}
-		}
+		model.addAttribute(verificationTokenService.confirmRegistrationToken(token), true);
+		return LOGIN;
 	}
 
 }

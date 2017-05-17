@@ -9,11 +9,11 @@ import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
 import com.zespolowka.entity.user.User;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 public class VerificationToken {
 
@@ -33,9 +33,7 @@ public class VerificationToken {
 	private LocalDateTime expiryDate;
 
 	public VerificationToken(String token, User user) {
-		super();
-		this.token = token;
-		this.user = user;
+		super(); this.token = token; this.user = user;
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
 

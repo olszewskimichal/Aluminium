@@ -354,9 +354,4 @@ public class TestService {
 		}
 
 	}
-
-	@Override
-	public String toString() {
-		return "TestServiceImpl{" + "testRepository=" + testRepository + '}';
-	}
 }

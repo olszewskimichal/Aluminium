@@ -1,5 +1,7 @@
 package com.zespolowka.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.zespolowka.entity.VerificationToken;
@@ -9,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by Pitek on 2016-02-17.
- */
 @Service
 @Slf4j
 public class VerificationTokenService {
@@ -39,8 +39,25 @@ public class VerificationTokenService {
 		verificationTokenRepository.deleteVerificationTokenByUser(user);
 	}
 
-	@Override
-	public String toString() {
-		return "VerificationTokenServiceImpl{" + "verificationTokenRepository=" + verificationTokenRepository + '}';
+	@Transactional
+	public String confirmRegistrationToken(String token) {
+		Optional<VerificationToken> verificationToken = getVerificationTokenByToken(token);
+		if (verificationToken.isPresent()) {
+			User user = verificationToken.get().getUser();
+			LocalDateTime localDateTime = LocalDateTime.now();
+			long diff = Duration.between(localDateTime, verificationToken.get().getExpiryDate()).toMinutes();
+
+			if (diff < 0L) {
+				log.info(String.format("Token juz jest nieaktulany %n dataDO= %s %n", verificationToken.get().getExpiryDate()));
+				return "nieaktualny";
+			}
+			else {
+				log.info("Token jest aktualny - aktywacja konta");
+				user.setEnabled(true);
+				deleteVerificationTokenByUser(user);
+				return "aktualny";
+			}
+		}
+		return "blednyToken";
 	}
 }

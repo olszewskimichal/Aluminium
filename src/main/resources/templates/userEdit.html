@@ -60,26 +60,26 @@
                 <div class="row">
                     <div class="form-group col-md-6">
 
-                        <label for="InputPasswordFirst" th:text="#{userEdit.passHash}"></label>
+                        <label for="InputPasswordFirst" th:text="#{userEdit.password}"></label>
 
                         <div class="input-group">
-                            <input type="passHash" class="form-control" id="InputPasswordFirst"
+                            <input type="password" class="form-control" id="InputPasswordFirst"
                                    name="InputPasswordFirst"
-                                   th:placeholder="#{userEdit.passHash}" th:field="*{passHash}"/>
+                                   th:placeholder="#{userEdit.password}" th:field="*{password}"/>
                         </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="InputPasswordSecond" th:text="#{userEdit.confirm_password}"></label>
 
                         <div class="input-group">
-                            <input type="passHash" class="form-control" id="InputPasswordSecond"
+                            <input type="password" class="form-control" id="InputPasswordSecond"
                                    name="InputPasswordSecond"
-                                   th:placeholder="#{userEdit.passHash}" th:field="*{confirmPassword}"/>
+                                   th:placeholder="#{userEdit.password}" th:field="*{confirmPassword}"/>
                         </div>
                     </div>
                 </div>
-                <button type="submit" name="submit" id="submit" value="Submit" class="btn btn-primary pull-right"
-                        th:text="#{userEdit.submit}"/>
+                <button name="submit" id="submit" value="Submit" class="btn btn-primary pull-right"
+                        th:text="#{userEdit.submit}"></button>
             </div>
         </div>
         <input type="hidden" th:name="${_csrf != null ? _csrf.parameterName : 'testing'}"

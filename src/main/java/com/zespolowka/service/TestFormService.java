@@ -134,10 +134,4 @@ public class TestFormService {
 		this.httpSession.removeAttribute(EDIT_TEST_ATTRIBUTE_NAME);
 	}
 
-
-	@Override
-	public String toString() {
-		return "TestFormService{" + "httpSession=" + httpSession + '}';
-	}
-
 }
