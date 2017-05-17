@@ -154,7 +154,7 @@ public class TestService {
 				if (task instanceof TaskClosed) {
 					taskForm.setTaskType(TaskForm.CLOSEDTASK);
 					taskForm.setQuestion(task.getQuestion());
-					taskForm.setPoints(task.getMaxPoints().intValue());
+					taskForm.setPoints(task.getMaxPoints());
 					if (((TaskClosed) task).getCountingType() == WRONG_RESET) {
 						taskForm.setWrongReset(true);
 						taskForm.setCountNotFull(false);
@@ -177,14 +177,14 @@ public class TestService {
 					taskForm.setTaskType(TaskForm.OPENTASK);
 					taskForm.setQuestion(task.getQuestion());
 					taskForm.setAnswer(((TaskOpen) task).getAnswer());
-					taskForm.setPoints(task.getMaxPoints().intValue());
+					taskForm.setPoints(task.getMaxPoints());
 					taskForm.setCaseSensitivity(((TaskOpen) task).getCaseSens());
 
 				}
 				else if (task instanceof TaskProgramming) {
 					taskForm.setTaskType(TaskForm.PROGRAMMINGTASK);
 					taskForm.setQuestion(task.getQuestion());
-					taskForm.setPoints(task.getMaxPoints().intValue());
+					taskForm.setPoints(task.getMaxPoints());
 					Set<TaskProgrammingDetail> taskProgrammingDetailSet = ((TaskProgramming) task).getProgrammingDetailSet();
 					Set<ProgrammingTaskForm> programmingTaskFormSet = new TreeSet<>();
 					Set<String> languages = new TreeSet<>();
@@ -209,7 +209,7 @@ public class TestService {
 				else if (task instanceof TaskSql) {
 					taskForm.setTaskType(TaskForm.SQLTASK);
 					taskForm.setQuestion(task.getQuestion());
-					taskForm.setPoints(task.getMaxPoints().intValue());
+					taskForm.setPoints(task.getMaxPoints());
 					taskForm.setPreparations(((TaskSql) task).getPreparations());
 					taskForm.setAnswer(((TaskSql) task).getSqlAnswer());
 				}
@@ -239,7 +239,7 @@ public class TestService {
 			for (TaskForm taskForm : taskFormList) {
 				switch (taskForm.getTaskType()) {
 					case 0: {
-						TaskClosed taskClosed = new TaskClosed(taskForm.getQuestion(), (float) taskForm.getPoints());
+						TaskClosed taskClosed = new TaskClosed(taskForm.getQuestion(),  taskForm.getPoints());
 						String answerList = taskForm.getAnswer();
 						String[] answers = answerList.split("[\\r\\n]+");
 						for (String answer : answers) {
@@ -260,14 +260,14 @@ public class TestService {
 						break;
 					}
 					case 1: {
-						TaskOpen taskOpen = new TaskOpen(taskForm.getQuestion(), (float) taskForm.getPoints());
+						TaskOpen taskOpen = new TaskOpen(taskForm.getQuestion(), taskForm.getPoints());
 						taskOpen.setAnswer(taskForm.getAnswer());
 						taskOpen.setCaseSens(taskForm.getCaseSensitivity());
 						test.addTaskToTest(taskOpen);
 						break;
 					}
 					case 2: {
-						TaskProgramming taskProgramming = new TaskProgramming(taskForm.getQuestion(), (float) taskForm.getPoints());
+						TaskProgramming taskProgramming = new TaskProgramming(taskForm.getQuestion(), taskForm.getPoints());
 						Set<ProgrammingTaskForm> programmingTaskForms = taskForm.getProgrammingTaskForms();
 						programmingTaskForms.stream().filter(ProgrammingTaskForm::getHidden).forEach(programmingTaskForm -> {
 							TaskProgrammingDetail taskProgrammingDetail = new TaskProgrammingDetail();
@@ -282,7 +282,7 @@ public class TestService {
 						break;
 					}
 					case 3: {
-						TaskSql taskSql = new TaskSql(taskForm.getQuestion(), (float) taskForm.getPoints());
+						TaskSql taskSql = new TaskSql(taskForm.getQuestion(), taskForm.getPoints());
 						taskSql.setPreparations(taskForm.getPreparations());
 						taskSql.setSqlAnswer(taskForm.getAnswer());
 						test.addTaskToTest(taskSql);

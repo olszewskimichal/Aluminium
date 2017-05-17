@@ -3,6 +3,7 @@ package com.zespolowka.entity.createtest;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -24,7 +25,7 @@ public class TaskClosed extends Task {
 	private Map<String, Boolean> answers = new TreeMap<>();
 	private int countingType;
 
-	public TaskClosed(String question, Float maxPoints) {
+	public TaskClosed(String question, BigDecimal maxPoints) {
 		super(question, maxPoints);
 	}
 

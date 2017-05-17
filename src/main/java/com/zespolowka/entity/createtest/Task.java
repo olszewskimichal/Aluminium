@@ -10,6 +10,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +28,9 @@ public abstract class Task {
 	@Lob
 	@Column(length = 10000)
 	private String question;
-	private Float maxPoints;
+	private BigDecimal maxPoints;
 
-	public Task(final String question, final Float maxPoints) {
+	public Task(final String question, final BigDecimal maxPoints) {
 		this.question = question;
 		this.maxPoints = maxPoints;
 	}

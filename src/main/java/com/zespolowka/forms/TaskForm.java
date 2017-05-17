@@ -1,5 +1,6 @@
 package com.zespolowka.forms;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,7 +20,7 @@ public class TaskForm {
 
 	private int taskType;
 
-	private Integer points = 1;
+	private BigDecimal points = BigDecimal.ONE;
 
 	private String preparations;
 

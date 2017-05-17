@@ -8,20 +8,21 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 import com.zespolowka.entity.createtest.Task;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Data
 @NoArgsConstructor
-public class TaskSolution {
+public abstract class TaskSolution {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private Float points;
+	private BigDecimal points;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Task task;

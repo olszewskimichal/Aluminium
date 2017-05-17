@@ -91,8 +91,7 @@ public class TestController {
 			createTestForm = testService.createForm(testService.getTestById(id));
 			testFormService.setEditTestIdInSession(id);
 			testFormService.updateEditTestFormInSession(createTestForm);
-		}
-		model.addAttribute("createTestForm", createTestForm);
+		} model.addAttribute("createTestForm", createTestForm);
 		return "editTest";
 	}
 
@@ -100,48 +99,37 @@ public class TestController {
 	@RequestMapping(value = "create/add", method = RequestMethod.POST)
 	public String addQuestion(@RequestParam(value = "questionId", defaultValue = "0") int questionId, final CreateTestForm createTestForm) {
 		testFormService.updateTestFormInSession(createTestForm);
-		log.info("Metoda - addQuestion");
-		switch (questionId) {
+		log.info("Metoda - addQuestion"); switch (questionId) {
 			case 0:
-				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.CLOSEDTASK));
-				break;
+				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.CLOSEDTASK)); break;
 
 			case 1:
-				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.OPENTASK));
-				break;
+				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.OPENTASK)); break;
 
 			case 2:
-				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.PROGRAMMINGTASK));
-				break;
+				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.PROGRAMMINGTASK)); break;
 
 			case 3:
-				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.SQLTASK));
-				break;
+				testFormService.addTaskFormToTestForm(new TaskForm(TaskForm.SQLTASK)); break;
 			default:
 				log.error("Bledne questionId");
-		}
-		return REDIRECT_TEST_CREATE;
+		} return REDIRECT_TEST_CREATE;
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
 	@RequestMapping(value = "edit/add", method = RequestMethod.POST)
 	public String addEditQuestion(@RequestParam(value = "questionId", defaultValue = "0") int questionId, final CreateTestForm createTestForm) {
 		testFormService.updateEditTestFormInSession(createTestForm);
-		log.info("Metoda - addEditQuestion");
-		switch (questionId) {
+		log.info("Metoda - addEditQuestion"); switch (questionId) {
 			case 0:
-				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.CLOSEDTASK));
-				break;
+				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.CLOSEDTASK)); break;
 			case 1:
-				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.OPENTASK));
-				break;
+				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.OPENTASK)); break;
 			case 2:
-				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.PROGRAMMINGTASK));
-				break;
+				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.PROGRAMMINGTASK)); break;
 
 			case 3:
-				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.SQLTASK));
-				break;
+				testFormService.addTaskFormToEditTestForm(new TaskForm(TaskForm.SQLTASK)); break;
 			default:
 				log.error("Bledne questionId");
 		}
@@ -213,8 +201,7 @@ public class TestController {
 		if (result.hasErrors()) {
 			log.info(result.getAllErrors().toString());
 			return "tmpCreateTest";
-		}
-		testFormService.updateTestFormInSession(createTestForm);
+		} testFormService.updateTestFormInSession(createTestForm);
 		Test test = testService.create(createTestForm);
 		log.info(test.toString());
 		testFormService.updateTestFormInSession(new CreateTestForm());
@@ -241,8 +228,7 @@ public class TestController {
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
 	@RequestMapping(value = "/delete/{id}")
 	public String deleteTest(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		log.info("Metoda - deleteTest");
-		testService.delete(id);
+		log.info("Metoda - deleteTest"); testService.delete(id);
 		redirectAttributes.addFlashAttribute("deleted", true);
 		return "redirect:/test/all";
 	}
@@ -251,8 +237,7 @@ public class TestController {
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('SUPERADMIN')")
 	@RequestMapping("/all")
 	public String showAll(Model model) {
-		log.info("metoda - showAll");
-		try {
+		log.info("metoda - showAll"); try {
 			Map<Test, Integer> testMap = new HashMap<>();
 			ArrayList<Test> lista = new ArrayList<>(testService.getAllTests());
 			for (Test aLista : lista)
@@ -265,22 +250,19 @@ public class TestController {
 		}
 		catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
-		}
-		return "tests";
+		} return "tests";
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public String showUserTests(@PathVariable final Long id, final Model model) {
-		log.info("nazwa metody = showUserTests");
-		try {
+		log.info("nazwa metody = showUserTests"); try {
 			User user = userService.getUserById(id).orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", id)));
 			model.addAttribute("Tests", solutionTestService.getSolutionTestsByUser(user));
 		}
 		catch (final Exception e) {
 			log.error(e.getMessage(), e);
 			log.info("{}\n{}", id.toString(), model);
-		}
-		return "userTests";
+		} return "userTests";
 	}
 
 	@RequestMapping("/pdf/{id}")
@@ -289,15 +271,11 @@ public class TestController {
 		Collection<SolutionTest> tests = solutionTestService.getSolutionTestsByTest(testService.getTestById(id));
 		final CurrentUser currentUser = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		String[] header = new String[5];
-		header[0] = "Lp";
-		header[1] = "Osoba";
-		header[2] = "Wynik testu";
-		header[3] = "%";
-		header[4] = "Data rozwiązania testu";
+		String[] header = new String[5]; header[0] = "Lp";
+		header[1] = "Osoba"; header[2] = "Wynik testu";
+		header[3] = "%"; header[4] = "Data rozwiązania testu";
 
-		String[][] body = new String[tests.size()][5];
-		int i = 0;
+		String[][] body = new String[tests.size()][5]; int i = 0;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		if (!tests.isEmpty()) {
 			String title = "Raport z dnia: " + LocalDate.now() + "\nDla: " + tests.iterator().next().getTest().getName() + "\n\n";
@@ -305,7 +283,7 @@ public class TestController {
 				body[i][0] = "" + Integer.toString(i + 1);
 				body[i][1] = "" + test.getUser().getName() + " " + test.getUser().getLastName() + ", " + test.getUser().getEmail();
 				body[i][2] = "" + test.getPoints() + " / " + test.getTest().getMaxPoints();
-				BigDecimal procent = BigDecimal.valueOf(test.getPoints() / test.getTest().getMaxPoints() * 100);
+				BigDecimal procent = test.getPoints().divide(test.getTest().getMaxPoints(),RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 				body[i][3] = "" + Float.toString(procent.setScale(2, RoundingMode.HALF_UP).floatValue()) + " %";
 				body[i][4] = "" + formatter.format(test.getEndSolution());
 				i++;
@@ -349,8 +327,7 @@ public class TestController {
                 }
                 outStream.close();
                 */
-				inputStream.close();
-				Files.delete(file.toPath());
+				inputStream.close(); Files.delete(file.toPath());
 			}
 			catch (IOException e) {
 				log.error(e.getMessage());

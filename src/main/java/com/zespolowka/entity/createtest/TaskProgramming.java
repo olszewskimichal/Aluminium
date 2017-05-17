@@ -4,6 +4,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class TaskProgramming extends Task {
 	private Set<TaskProgrammingDetail> programmingDetailSet = new HashSet<>();
 
 
-	public TaskProgramming(final String question, final Float maxPoints) {
+	public TaskProgramming(final String question, final BigDecimal maxPoints) {
 		super(question, maxPoints);
 	}
 

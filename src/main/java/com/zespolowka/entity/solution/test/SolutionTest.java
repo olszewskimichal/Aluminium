@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class SolutionTest {
 	private Integer attempt;
 	private LocalDateTime beginSolution;
 	private LocalDateTime endSolution;
-	private Float points;
+	private BigDecimal points;
 	@ManyToOne
 	private User user;
 
@@ -50,7 +51,7 @@ public class SolutionTest {
 		this.solutionTasks = new ArrayList<>();
 		this.solutionStatus = SolutionStatus.OPEN;
 		this.test = test;
-		this.points = 0.0f;
+		this.points = BigDecimal.ZERO;
 		this.user = user;
 	}
 

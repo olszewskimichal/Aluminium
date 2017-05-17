@@ -2,6 +2,7 @@ package com.zespolowka;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.TreeSet;
 
 import com.zespolowka.forms.CreateTestForm;
@@ -34,7 +35,7 @@ public class CreateTestFormValidationTest {
 		TaskForm taskForm = new TaskForm();
 		taskForm.setQuestion("Pytanie 1");
 		taskForm.setTaskType(TaskForm.CLOSEDTASK);
-		taskForm.setPoints(1);
+		taskForm.setPoints(BigDecimal.ONE);
 		taskForm.setAnswer("aaaaaaaa" + "\n" + "<*>bbbbbbbbb");
 		taskForm.setCountNotFull(true);
 		createTestForm.getTasks().add(taskForm);

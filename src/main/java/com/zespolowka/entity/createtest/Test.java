@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Test {
 	private Long attempts;
 	private LocalDate beginDate;
 	private LocalDate endDate;
-	private Float maxPoints;
+	private BigDecimal maxPoints;
 	private String passHash = "";
 	private Integer timePerAttempt;
 	@OneToMany(cascade = CascadeType.ALL)
@@ -37,31 +38,26 @@ public class Test {
 
 	public Test() {
 		this.tasks = new ArrayList<>();
-		this.maxPoints = 0.0f;
-		this.passHash = "";
+		this.maxPoints = BigDecimal.ZERO; this.passHash = "";
 	}
 
 	public Test(final String name, final Long attempts, final LocalDate beginDate, final LocalDate endDate, final List<Task> tasks, final String messageFAQ) {
-		this.name = name;
-		this.attempts = attempts;
-		this.beginDate = beginDate;
-		this.endDate = endDate;
-		this.tasks = tasks;
-		this.maxPoints = 0.0f;
+		this.name = name; this.attempts = attempts;
+		this.beginDate = beginDate; this.endDate = endDate;
+		this.tasks = tasks; this.maxPoints = BigDecimal.ZERO;
 		this.messageFAQ = messageFAQ;
 	}
 
 	public void addTaskToTest(final Task task) {
-		tasks.add(task);
-		updateMaxPoints(task.getMaxPoints());
+		tasks.add(task); updateMaxPoints(task.getMaxPoints());
 	}
 
 	public Boolean isOpenTest() {
 		return passHash.length() <= 0;
 	}
 
-	public void updateMaxPoints(Float points) {
-		this.maxPoints += points;
+	public void updateMaxPoints(BigDecimal points) {
+		this.maxPoints = this.maxPoints.add(points);
 	}
 
 }

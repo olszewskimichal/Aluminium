@@ -3,6 +3,7 @@ package com.zespolowka.entity.createtest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import java.math.BigDecimal;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,7 @@ public class TaskSql extends Task {
 	@Column(length = 10000)
 	private String preparations;
 
-	public TaskSql(String question, Float maxPoints) {
+	public TaskSql(String question, BigDecimal maxPoints) {
 		super(question, maxPoints);
 	}
 }

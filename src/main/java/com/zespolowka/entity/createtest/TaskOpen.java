@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ public class TaskOpen extends Task {
 
 	private Boolean caseSens;
 
-	public TaskOpen(String question, Float maxPoints) {
+	public TaskOpen(String question, BigDecimal maxPoints) {
 		super(question, maxPoints);
 		this.answer = "";
 		this.caseSens = false;

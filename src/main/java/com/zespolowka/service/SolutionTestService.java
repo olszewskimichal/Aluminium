@@ -148,14 +148,12 @@ public class SolutionTestService {
 				solutionTestRepository.saveAndFlush(solutionTest);
 				solutionTestRepository.flush();
 			}
-			else solutionTest = solutionTest2.get();
-			this.taskNo = 0;
+			else solutionTest = solutionTest2.get(); this.taskNo = 0;
 			solutionTestForm.setName(test.getName());
 			solutionTestForm.setSolutionId(solutionTest.getId());
 			List<SolutionTaskForm> solutionTaskFormList = new ArrayList<>();
 			List<Task> tasks = test.getTasks();
-			Collections.shuffle(tasks);
-			test.setTasks(tasks);
+			Collections.shuffle(tasks); test.setTasks(tasks);
 			solutionTest.setTest(test);
 
 			List<Long> integerList = new ArrayList<>();
@@ -173,18 +171,15 @@ public class SolutionTestService {
 				else if (task instanceof TaskSql) {
 					solutionTaskFormList.add(new SolutionTaskForm(task, SolutionTaskForm.SQLTASK));
 				}
-			}
-			httpSession.setAttribute(INTEGER_LIST, integerList);
+			} httpSession.setAttribute(INTEGER_LIST, integerList);
 			solutionTestRepository.saveAndFlush(solutionTest);
 			solutionTestForm.setTasks(solutionTaskFormList);
 			this.taskNo = 0;
 		}
 		catch (Exception e) {
-			log.info(test.toString());
-			log.info(user.toString());
+			log.info(test.toString()); log.info(user.toString());
 			log.info(solutionTestForm.toString());
-		}
-		return solutionTestForm;
+		} return solutionTestForm;
 	}
 
 	public void addTaskSolutionToTest(SolutionTest solutionTest, TaskSolution taskSolution) throws IOException, ParseException {
@@ -210,58 +205,53 @@ public class SolutionTestService {
 						if ((stringBooleanEntry.getValue() != null && stringBooleanEntry.getValue()) && (!correctAnswers.get(stringBooleanEntry.getKey())) || ((stringBooleanEntry.getValue() == null || !stringBooleanEntry.getValue()) && (correctAnswers.get(stringBooleanEntry.getKey())))) {
 							theSame = false;
 						}
-					}
-					if (theSame) {
+					} if (theSame) {
 						taskSol.setPoints(taskClo.getMaxPoints());
 					}
-					else taskSol.setPoints(0.0f);
+					else taskSol.setPoints(BigDecimal.ZERO);
 				}
 				else {
-					Float pointsDivide = 0.0f;
-					Float noCorrectAnswers = 0.0f;
+					BigDecimal pointsDivide = BigDecimal.ZERO;
+					BigDecimal noCorrectAnswers = BigDecimal.ZERO;
 					Boolean chooseIncorect = false;
 					for (Map.Entry<String, Boolean> stringBooleanEntry : userAnswers.entrySet()) {
 						if (stringBooleanEntry.getValue() == null)
 							userAnswers.put(stringBooleanEntry.getKey(), false);
 						if (correctAnswers.get(stringBooleanEntry.getKey()))
-							pointsDivide++;
+							pointsDivide = pointsDivide.add(BigDecimal.ONE);
 						if (stringBooleanEntry.getValue() && !correctAnswers.get(stringBooleanEntry.getKey())) {
-							chooseIncorect = true;
-							break;
+							chooseIncorect = true; break;
 						}
 						else if (stringBooleanEntry.getValue().equals(correctAnswers.get(stringBooleanEntry.getKey())) && correctAnswers.get(stringBooleanEntry.getKey()))
-							noCorrectAnswers++;
+							noCorrectAnswers = noCorrectAnswers.add(BigDecimal.ONE);
 					}
-					if (chooseIncorect || noCorrectAnswers < 1.0F) {
-						taskSol.setPoints(0.0f);
+					if (chooseIncorect || noCorrectAnswers.compareTo(BigDecimal.ONE) < 0) {
+						taskSol.setPoints(BigDecimal.ZERO);
 					}
 					else {
-						taskSol.setPoints(taskClo.getMaxPoints() / (pointsDivide / noCorrectAnswers));
+						taskSol.setPoints(taskClo.getMaxPoints().divide(pointsDivide.divide(noCorrectAnswers, RoundingMode.HALF_UP), BigDecimal.ROUND_HALF_UP));
 					}
 				}
-				solutionTest.setPoints(solutionTest.getPoints() + taskSol.getPoints());
+				solutionTest.setPoints(solutionTest.getPoints().add(taskSol.getPoints()));
 				solutionTest.getSolutionTasks().add(taskSol);
-			}
-			if (taskSolution instanceof TaskOpenSolution) {
+			} if (taskSolution instanceof TaskOpenSolution) {
 				TaskOpenSolution taskSol = (TaskOpenSolution) taskSolution;
 				TaskOpen taskOp = (TaskOpen) taskSol.getTask();
 				if (!taskOp.getCaseSens()) {
 					if (taskSol.getAnswer().equalsIgnoreCase(taskOp.getAnswer())) {
-						solutionTest.setPoints(solutionTest.getPoints() + taskOp.getMaxPoints());
+						solutionTest.setPoints(solutionTest.getPoints().add(taskOp.getMaxPoints()));
 						taskSol.setPoints(taskOp.getMaxPoints());
 					}
-					else taskSol.setPoints(0.0f);
+					else taskSol.setPoints(BigDecimal.ZERO);
 				}
 				else {
 					if (taskSol.getAnswer().equals(taskOp.getAnswer())) {
-						solutionTest.setPoints(solutionTest.getPoints() + taskOp.getMaxPoints());
+						solutionTest.setPoints(solutionTest.getPoints().add(taskOp.getMaxPoints()));
 						taskSol.setPoints(taskOp.getMaxPoints());
 					}
-					else taskSol.setPoints(0.0f);
-				}
-				solutionTest.getSolutionTasks().add(taskSol);
-			}
-			if (taskSolution instanceof TaskProgrammingSolution) {
+					else taskSol.setPoints(BigDecimal.ZERO);
+				} solutionTest.getSolutionTasks().add(taskSol);
+			} if (taskSolution instanceof TaskProgrammingSolution) {
 				TaskProgrammingSolution taskSol = (TaskProgrammingSolution) taskSolution;
 				TaskProgramming taskProgramming = (TaskProgramming) taskSol.getTask();
 				SolutionConfig solutionConfig = new SolutionConfig();
@@ -305,13 +295,13 @@ public class SolutionTestService {
 					BigDecimal all = BigDecimal.valueOf((Long) jsonObject.get("all"));
 					BigDecimal passed = BigDecimal.valueOf((Long) jsonObject.get("passed"));
 					BigDecimal resultTest = (passed.divide(all, MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP)); //TODO dodac czas rozwiazania do statystyk
-					BigDecimal points = resultTest.multiply(BigDecimal.valueOf(taskSol.getTask().getMaxPoints()), MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP);
-					taskSol.setPoints(points.floatValue());
+					BigDecimal points = resultTest.multiply(taskSol.getTask().getMaxPoints(), MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP);
+					taskSol.setPoints(points);
 					if (jsonObject.get("output") != null) {
 						String output = (String) jsonObject.get("output");
 						taskSol.setFailedUnitTest(output);
 					}
-					solutionTest.setPoints(solutionTest.getPoints() + points.floatValue());
+					solutionTest.setPoints(solutionTest.getPoints().add(points));
 				}
 				else {
 					CompilationError compilationError = new CompilationError();
@@ -321,15 +311,13 @@ public class SolutionTestService {
 							compilationError.setType(type);
 							compilationError.setError(jsonObject.get(type.getValue()).toString());
 						}
-					}
-					taskSol.setCompilationError(compilationError);
-					taskSol.setPoints(0.0f);
+					} taskSol.setCompilationError(compilationError);
+					taskSol.setPoints(BigDecimal.ZERO);
 				}
 				FileUtils.deleteDirectory(new File(resultDir + userDirectory));
 				FileUtils.deleteDirectory(new File(dir + userDirectory));
 				solutionTest.getSolutionTasks().add(taskSol);
-			}
-			if (taskSolution instanceof TaskSqlSolution) {
+			} if (taskSolution instanceof TaskSqlSolution) {
 				TaskSqlSolution taskSqlSolution = (TaskSqlSolution) taskSolution;
 				TaskSql taskSql = (TaskSql) taskSqlSolution.getTask();
 				SolutionConfig solutionConfig = new SolutionConfig();
@@ -337,8 +325,7 @@ public class SolutionTestService {
 				JSONObject source = new JSONObject();
 				source.put("task0", taskSqlSolution.getSqlAnswer());
 				JSONObject tests = new JSONObject();
-				JSONArray array = new JSONArray();
-				array.add("type0");
+				JSONArray array = new JSONArray(); array.add("type0");
 				array.add(taskSql.getSqlAnswer());
 				tests.put("task0", array);
 				String userDirectory = solutionTest.getTest().getName() + '_' + solutionTest.getAttempt() + '_' + solutionTest.getUser().getId() + '_' + UUID.randomUUID().toString().substring(0, 4) + '/';
@@ -358,9 +345,9 @@ public class SolutionTestService {
 					BigDecimal all = BigDecimal.valueOf((Long) jsonObject.get("all"));
 					BigDecimal passed = BigDecimal.valueOf((Long) jsonObject.get("passed"));
 					BigDecimal resultTest = (passed.divide(all, MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP));
-					BigDecimal points = resultTest.multiply(BigDecimal.valueOf(taskSqlSolution.getTask().getMaxPoints()), MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP);
-					taskSqlSolution.setPoints(points.floatValue());
-					solutionTest.setPoints(solutionTest.getPoints() + points.floatValue());
+					BigDecimal points = resultTest.multiply(taskSqlSolution.getTask().getMaxPoints(), MathContext.DECIMAL128).setScale(4, RoundingMode.HALF_UP);
+					taskSqlSolution.setPoints(points);
+					solutionTest.setPoints(solutionTest.getPoints().add(points));
 				}
 				else {
 					CompilationError compilationError = new CompilationError();
@@ -372,7 +359,7 @@ public class SolutionTestService {
 						}
 					}
 					taskSqlSolution.setCompilationError(compilationError);
-					taskSqlSolution.setPoints(0.0f);
+					taskSqlSolution.setPoints(BigDecimal.ZERO);
 				}
 				FileUtils.deleteDirectory(new File(resultDir + userDirectory));
 				FileUtils.deleteDirectory(new File(dir + userDirectory));
@@ -391,8 +378,7 @@ public class SolutionTestService {
 		try {
 			List<SolutionTaskForm> solutionTaskForms = solutionTestForm.getTasks();
 			solutionTest.setSolutionTasks(new ArrayList<>());
-			solutionTest.setPoints(0.0f);
-			this.taskNo = 0;
+			solutionTest.setPoints(BigDecimal.ZERO); this.taskNo = 0;
 			for (SolutionTaskForm solutionTaskForm : solutionTaskForms)
 				if (solutionTaskForm.getTaskType() == SolutionTaskForm.CLOSEDTASK) {
 					TaskClosedSolution taskClosedSolution = new TaskClosedSolution(solutionTaskForm.getTask());
@@ -417,8 +403,7 @@ public class SolutionTestService {
 					TaskSqlSolution taskSqlSolution = new TaskSqlSolution(solutionTaskForm.getTask());
 					taskSqlSolution.setSqlAnswer(solutionTaskForm.getAnswerCode());
 					addTaskSolutionToTest(solutionTest, taskSqlSolution);
-				}
-			return solutionTest;
+				} return solutionTest;
 		}
 		catch (ParseException | IOException e) {
 			throw new SolutionTestException(e.getMessage());
@@ -451,23 +436,18 @@ public class SolutionTestService {
 			log.info(e.getMessage(), e);
 			log.info(solutionTest.toString());
 			log.info(solutionTestForm.toString());
-		}
-		return solutionTestForm;
+		} return solutionTestForm;
 	}
 
 	public String executeCommand(String command) throws IOException, InterruptedException {
-		log.info(command);
-		StringBuilder output = new StringBuilder();
-		Process p;
-		p = Runtime.getRuntime().exec(command);
+		log.info(command); StringBuilder output = new StringBuilder();
+		Process p; p = Runtime.getRuntime().exec(command);
 		p.waitFor();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-		String line;
-		while ((line = reader.readLine()) != null) {
+		String line; while ((line = reader.readLine()) != null) {
 			output.append(line).append('\n');
-		}
-		return output.toString();
+		} return output.toString();
 
 	}
 }
