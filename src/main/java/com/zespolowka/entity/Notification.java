@@ -45,9 +45,13 @@ public class Notification {
 
 
 	public Notification(String message, String topic, long userId, User sender) { //data auto
-		this.date = new Date(); this.message = message;
-		this.topic = topic; this.userId = userId; this.status = true;
-		this.userRole = null; this.sender = sender;
+		this.date = new Date();
+		this.message = message;
+		this.topic = topic;
+		this.userId = userId;
+		this.status = true;
+		this.userRole = null;
+		this.sender = sender;
 	}
 
 	public void changeStatus(Boolean status) {

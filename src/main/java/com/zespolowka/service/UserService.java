@@ -56,8 +56,8 @@ public class UserService {
 		return (Collection<User>) userRepository.findAll();
 	}
 
-	public Collection<User> findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String like) {
-		return userRepository.findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(like, like, like);
+	public Collection<User> findUsersByName(String like) {
+		return userRepository.findUsersByName(like);
 	}
 
 	public User create(UserCreateForm form, String registerUrl) throws MessagingException {
@@ -69,7 +69,8 @@ public class UserService {
 		//VerificationToken verificationToken = verificationTokenService.create(user, token);
 		//String url = registerUrl + "/registrationConfirm?token=" + verificationToken.getToken();
 		//mailService.sendVerificationMail(url, user);
-		log.info(user.toString()); return userRepository.save(user);
+		log.info(user.toString());
+		return userRepository.save(user);
 	}
 
 
@@ -88,10 +89,12 @@ public class UserService {
 		User user = getUserById(userId).orElseThrow(() -> new NoSuchElementException(String.format("Uzytkownik o id =%s nie istnieje", userId)));
 		if (Objects.equals(currentUser.getId(), userId) || "ADMIN".equals(currentUser.getRole().name()) && "SUPERADMIN".equals(user.getRole().name())) {
 			return false;
-		} notificationService.deleteMessagesBySender(user);
+		}
+		notificationService.deleteMessagesBySender(user);
 		notificationService.deleteMessagesByUserId(user.getId());
 		verificationTokenService.deleteVerificationTokenByUser(userRepository.findOne(userId));
-		userRepository.delete(userId); return true;
+		userRepository.delete(userId);
+		return true;
 	}
 
 	public User getCurrentUser() {
@@ -112,6 +115,7 @@ public class UserService {
 				user.enable();
 				return new ImmutablePair<>(true, "Aktywowano uzytkownika " + user.getEmail());
 			}
-		} return new ImmutablePair<>(false, "Nie masz uprawnień");
+		}
+		return new ImmutablePair<>(false, "Nie masz uprawnień");
 	}
 }

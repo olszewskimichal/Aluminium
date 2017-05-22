@@ -38,7 +38,8 @@ public abstract class Task {
 	private List<TaskSolution> taskSolutions = new ArrayList<>();
 
 	public Task(final String question, final BigDecimal maxPoints) {
-		this.question = question; this.maxPoints = maxPoints;
+		this.question = question;
+		this.maxPoints = maxPoints;
 	}
 
 	public void addTaskSolution(TaskSolution taskSolution) {

@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	List<Notification> findTop5ByUserIdOrUserRoleOrderByDateDesc(Long userId, Role userRole);
-
 	@Transactional
 	@Modifying
 	List<Notification> deleteByUserId(long userId);

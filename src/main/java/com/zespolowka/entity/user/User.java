@@ -52,19 +52,22 @@ public class User {
 	@JsonIgnore
 	@Enumerated(EnumType.STRING)
 	private Role role;
-
-	public User() {
-		this.enabled = false; this.loginTries = 3;
-	}
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SolutionTest> solutionTests = new ArrayList<>();
 
+	public User() {
+		this.enabled = false;
+		this.loginTries = 3;
+	}
+
 
 	public User(String name, String lastName, String email, String passwordHash) {
-		this.name = name; this.lastName = lastName;
-		this.email = email; this.passwordHash = passwordHash;
-		this.role = Role.USER; this.enabled = false;
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.passwordHash = passwordHash;
+		this.role = Role.USER;
+		this.enabled = false;
 		this.loginTries = 3;
 	}
 

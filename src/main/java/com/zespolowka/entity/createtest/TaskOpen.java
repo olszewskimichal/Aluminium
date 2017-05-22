@@ -3,7 +3,6 @@ package com.zespolowka.entity.createtest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-
 import java.math.BigDecimal;
 
 import lombok.Data;

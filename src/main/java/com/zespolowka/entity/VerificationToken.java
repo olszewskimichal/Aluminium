@@ -34,7 +34,9 @@ public class VerificationToken {
 	private LocalDateTime expiryDate;
 
 	public VerificationToken(String token, User user) {
-		super(); this.token = token; this.user = user;
+		super();
+		this.token = token;
+		this.user = user;
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
 

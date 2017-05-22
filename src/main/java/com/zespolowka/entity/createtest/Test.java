@@ -38,18 +38,23 @@ public class Test {
 
 	public Test() {
 		this.tasks = new ArrayList<>();
-		this.maxPoints = BigDecimal.ZERO; this.passHash = "";
+		this.maxPoints = BigDecimal.ZERO;
+		this.passHash = "";
 	}
 
 	public Test(final String name, final Long attempts, final LocalDate beginDate, final LocalDate endDate, final List<Task> tasks, final String messageFAQ) {
-		this.name = name; this.attempts = attempts;
-		this.beginDate = beginDate; this.endDate = endDate;
-		this.tasks = tasks; this.maxPoints = BigDecimal.ZERO;
+		this.name = name;
+		this.attempts = attempts;
+		this.beginDate = beginDate;
+		this.endDate = endDate;
+		this.tasks = tasks;
+		this.maxPoints = BigDecimal.ZERO;
 		this.messageFAQ = messageFAQ;
 	}
 
 	public void addTaskToTest(final Task task) {
-		tasks.add(task); updateMaxPoints(task.getMaxPoints());
+		tasks.add(task);
+		updateMaxPoints(task.getMaxPoints());
 	}
 
 	public Boolean isOpenTest() {

@@ -104,9 +104,7 @@ public class NotificationService {
 
 	public void deleteMessagesByUserId(Long id) {
 		log.info("deleteMessagesByUserId");
-		log.info("Przed usunieciem:{}", notificationRepository.count());
 		notificationRepository.deleteByUserId(id);
-		log.info("Po usunieciu:{}", notificationRepository.count());
 	}
 
 	public void deleteMessagesBySender(User user) {

@@ -33,7 +33,8 @@ public class TaskProgrammingSolution extends TaskSolution {
 	private CompilationError compilationError;
 
 	public TaskProgrammingSolution(Task task) {
-		super(task); this.answerCode = "";
+		super(task);
+		this.answerCode = "";
 	}
 
 }

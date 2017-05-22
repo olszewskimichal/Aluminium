@@ -53,8 +53,10 @@ public class SolutionTest {
 
 	public SolutionTest(Test test, User user) {
 		this.solutionTasks = new ArrayList<>();
-		this.solutionStatus = SolutionStatus.OPEN; this.test = test;
-		this.points = BigDecimal.ZERO; this.user = user;
+		this.solutionStatus = SolutionStatus.OPEN;
+		this.test = test;
+		this.points = BigDecimal.ZERO;
+		this.user = user;
 	}
 
 	public Long secondsToEnd() {

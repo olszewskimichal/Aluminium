@@ -3,6 +3,7 @@ package com.zespolowka.service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -30,22 +31,21 @@ public class TestFormService {
 
 	public CreateTestForm getTestFromSession() {
 		log.info("Metoda - getTestFromSession");
-		CreateTestForm createTestForm = (CreateTestForm) this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME);
-		if (createTestForm == null) {
-			createTestForm = new CreateTestForm();
-			this.httpSession.setAttribute(TEST_ATTRIBUTE_NAME, createTestForm);
-		}
-		return createTestForm;
+
+		return (CreateTestForm) Optional.ofNullable(this.httpSession.getAttribute(TEST_ATTRIBUTE_NAME)).orElseGet(() -> {
+			CreateTestForm testForm = new CreateTestForm();
+			httpSession.setAttribute(EDIT_TEST_ATTRIBUTE_NAME, testForm);
+			return testForm;
+		});
 	}
 
 	public CreateTestForm getEditTestFromSession() {
 		log.info("Metoda - getEditTestFromSession");
-		CreateTestForm createTestForm = (CreateTestForm) this.httpSession.getAttribute(EDIT_TEST_ATTRIBUTE_NAME);
-		if (createTestForm == null) {
-			createTestForm = new CreateTestForm();
-			this.httpSession.setAttribute(EDIT_TEST_ATTRIBUTE_NAME, createTestForm);
-		}
-		return createTestForm;
+		return (CreateTestForm) Optional.ofNullable(this.httpSession.getAttribute(EDIT_TEST_ATTRIBUTE_NAME)).orElseGet(() -> {
+			CreateTestForm testForm = new CreateTestForm();
+			httpSession.setAttribute(EDIT_TEST_ATTRIBUTE_NAME, testForm);
+			return testForm;
+		});
 	}
 
 
@@ -68,30 +68,14 @@ public class TestFormService {
 	public void addTaskFormToTestForm(final TaskForm taskForm) {
 		log.info("Metoda - addTaskFormToTestForm");
 		final CreateTestForm createTestForm = getTestFromSession();
-		try {
-			createTestForm.addTask(taskForm);
-			updateTestFormInSession(createTestForm);
-		}
-		catch (Exception e) {
-			log.info(e.getMessage(), e);
-			log.info(createTestForm.toString());
-			log.info(taskForm.toString());
-		}
-
+		createTestForm.addTask(taskForm);
+		updateTestFormInSession(createTestForm);
 	}
 
 	public void addTaskFormToEditTestForm(final TaskForm taskForm) {
 		final CreateTestForm createTestForm = getEditTestFromSession();
-		try {
-			createTestForm.addTask(taskForm);
-			updateTestFormInSession(createTestForm);
-		}
-		catch (Exception e) {
-			log.info(e.getMessage(), e);
-			log.info(createTestForm.toString());
-			log.info(taskForm.toString());
-		}
-
+		createTestForm.addTask(taskForm);
+		updateTestFormInSession(createTestForm);
 	}
 
 	public Set<ProgrammingTaskForm> createProgrammingTaskSet(Set<ProgrammingTaskForm> programmingTaskFormSet, String[] languages, TaskForm taskForm) {

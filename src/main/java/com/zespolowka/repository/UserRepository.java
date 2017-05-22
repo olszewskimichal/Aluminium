@@ -20,7 +20,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 	List<User> findUsersByRole(Role role);
 
-	Collection<User> findUsersByEmailIgnoreCaseContainingOrNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String email, String name, String lastname);
+	@Query("select u from User u where lower(u.email) like lower(%?1%) or lower(u.name) like %?1%")
+	Collection<User> findUsersByName(String email);
 
 	@Transactional
 	@Modifying

@@ -34,8 +34,10 @@ public class CreateTestValidator implements Validator {
 	private int invalidTask;
 
 	public CreateTestValidator() {
-		questionNull = false; invalidBeginDate = false;
-		invalidEndDate = false; beginDateAfterEndDate = false;
+		questionNull = false;
+		invalidBeginDate = false;
+		invalidEndDate = false;
+		beginDateAfterEndDate = false;
 		questionWithoutAnswer = false;
 		closedTaskWithoutCorrectAnswer = false;
 		closedTaskWithoutCountingPointOption = false;
@@ -62,7 +64,8 @@ public class CreateTestValidator implements Validator {
 		if (createTestForm.getPassword() == null)
 			createTestForm.setPassword("");
 
-		invalidBeginDate = false; invalidEndDate = false;
+		invalidBeginDate = false;
+		invalidEndDate = false;
 		beginDateAfterEndDate = false;
 
 		try {
@@ -70,7 +73,8 @@ public class CreateTestValidator implements Validator {
 		}
 		catch (DateTimeParseException ignored) {
 			invalidBeginDate = true;
-		} try {
+		}
+		try {
 			LocalDate.parse(createTestForm.getEndDate(), dateTimeFormatter);
 		}
 		catch (DateTimeParseException ignored) {
@@ -84,7 +88,8 @@ public class CreateTestValidator implements Validator {
 		}
 
 		List<TaskForm> taskForms = createTestForm.getTasks();
-		questionNull = false; questionWithoutAnswer = false;
+		questionNull = false;
+		questionWithoutAnswer = false;
 		closedTaskWithoutCorrectAnswer = false;
 		closedTaskWithoutCountingPointOption = false;
 		taskWithoutPoints = false;
@@ -101,7 +106,8 @@ public class CreateTestValidator implements Validator {
 				if (!taskWithoutPoints && (taskForm.getPoints() == null || taskForm.getPoints().compareTo(BigDecimal.ONE) < 0)) {
 					taskWithoutPoints = true;
 					invalidTask = taskForms.indexOf(taskForm);
-				} if (taskForm.getTaskType() == TaskForm.CLOSEDTASK) {
+				}
+				if (taskForm.getTaskType() == TaskForm.CLOSEDTASK) {
 					if (!questionWithoutAnswer && (taskForm.getAnswer() == null || taskForm.getAnswer().length() < 3)) {
 						questionWithoutAnswer = true;
 						invalidTask = taskForms.indexOf(taskForm);
@@ -117,9 +123,11 @@ public class CreateTestValidator implements Validator {
 						Boolean haveCorrectAnswer = false;
 						for (String answer : answers) {
 							if (answer.startsWith("<*>")) {
-								haveCorrectAnswer = true; break;
+								haveCorrectAnswer = true;
+								break;
 							}
-						} if (!haveCorrectAnswer) {
+						}
+						if (!haveCorrectAnswer) {
 							closedTaskWithoutCorrectAnswer = true;
 							invalidTask = taskForms.indexOf(taskForm);
 						}
@@ -129,21 +137,24 @@ public class CreateTestValidator implements Validator {
 					if (!programmingTaskWithoutChoosenLanguage && (taskForm.getLanguages().isEmpty() || taskForm.getLanguages() == null)) {
 						programmingTaskWithoutChoosenLanguage = true;
 						invalidTask = taskForms.indexOf(taskForm);
-					} if (!programmingTaskWithoutChoosenLanguage) {
+					}
+					if (!programmingTaskWithoutChoosenLanguage) {
 						Set<ProgrammingTaskForm> programmingTaskFormSet = taskForm.getProgrammingTaskForms();
 						programmingTaskFormSet.stream().filter(programmingTaskForm -> programmingTaskForm.getHidden() && !programingDetailTaskTestCodeNull && (programmingTaskForm.getTestCode() == null || programmingTaskForm.getTestCode().length() < 10)).forEach(programmingTaskForm -> {
 							programingDetailTaskTestCodeNull = true;
 							invalidTask = taskForms.indexOf(taskForm);
 						});
 					}
-				} if (taskForm.getTaskType() == TaskForm.SQLTASK) {
+				}
+				if (taskForm.getTaskType() == TaskForm.SQLTASK) {
 					if (!sqlTaskWithoutPreparations && (taskForm.getPreparations().length() < 6 || taskForm.getPreparations() == null)) {
 						sqlTaskWithoutPreparations = true;
 						invalidTask = taskForms.indexOf(taskForm);
 					}
 				}
 			}
-		} if (invalidBeginDate)
+		}
+		if (invalidBeginDate)
 			errors.rejectValue("beginDate", "Error.createTestForm.beginDate");
 		if (invalidEndDate)
 			errors.rejectValue("endDate", "Error.createTestForm.endDate");
