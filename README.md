@@ -1,2 +1,3 @@
 # Aluminium
-28-11-2015 wersja 0.0.1
+Alluminium powstał w ramach uczelnianego przedmiotu Programowanie Zespołowe na zlecenie firmy Nokia.
+Jest to rozbudowana, webowa platforma testowania wiedzy pracowników i kandydatów na różne stanowiska.
